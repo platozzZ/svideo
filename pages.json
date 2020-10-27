@@ -1,0 +1,104 @@
+{
+	"pages": [
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页",
+				"navigationStyle":"custom"
+			}
+		},
+		{
+			"path": "pages/select/select",
+			"style": {
+				"navigationBarTitleText": "精选",
+				"navigationStyle":"custom"
+			}	
+		},
+		{
+			"path": "pages/add/add",
+			"style": {
+				"navigationBarTitleText": "发布视频",
+				"navigationStyle":"custom"
+			}	
+		},
+		{
+			"path": "pages/message/message",
+			"style": {
+				"navigationBarTitleText": "消息",
+				"navigationStyle":"custom"
+			}	
+		},
+		{
+			"path": "pages/mine/mine",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"navigationStyle":"custom"
+			}	
+		},
+		{
+			"path": "pages/videoDetail/videoDetail",
+			"style": {
+				"navigationBarTitleText": "视频详情",
+				"navigationStyle":"custom"
+			}	
+		},
+		{
+			"path": "pages/integralMall/integralMall",
+			"style": {
+				"navigationBarTitleText": "积分商城",
+				"navigationStyle":"custom"
+			}	
+		},
+		{
+			"path": "pages/integralMall/mallDetail",
+			"style": {
+				"navigationBarTitleText": "商品详情",
+				"navigationStyle":"custom",
+				"enablePullDownRefresh": true
+			}	
+		},
+		{
+			"path": "pages/integral/integral",
+			"style": {
+				"navigationBarTitleText": "积分明细",
+				"navigationStyle":"custom"
+			}	
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "",
+		"navigationBarBackgroundColor": "#fff",
+		"backgroundColor": "#FFFFFF"
+	},
+	"tabBar": {
+		"color": "#999",
+		"selectedColor": "#000",
+		"backgroundColor": "#fff",
+		"midButton": {
+			"text": "发布"
+		},
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/select/select",
+				"text": "精选"
+			},
+			{
+				"pagePath": "pages/message/message",
+				"text": "消息"
+			},
+			{
+				"pagePath": "pages/mine/mine",
+				"text": "我的"
+			}
+		]
+	},
+	"easycom": {
+		"^uni-(.*)": "@/components/uni-$1/uni-$1.vue",
+		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+	}
+}

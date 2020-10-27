@@ -1,0 +1,35 @@
+.text-pgray{
+	color: #8e8e8e;
+}
+.bg-pyellow{
+	background-color: #FFD524;
+}
+
+.footer{
+	height: calc(90rpx + constant(safe-area-inset-bottom) / 2);
+	height: calc(90rpx + env(safe-area-inset-bottom) / 2);
+	padding-bottom: calc(constant(safe-area-inset-bottom) / 2);
+	padding-bottom: calc(env(safe-area-inset-bottom) / 2);
+	background-color: #fff;
+}
+.footer-seat{
+	height: 90rpx;
+}
+.footer-content{
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 90rpx;
+	z-index: 5;
+	bottom: calc(constant(safe-area-inset-bottom) / 2);
+	bottom: calc(env(safe-area-inset-bottom) / 2);
+}
+.footer-btn{
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 34rpx;
+}

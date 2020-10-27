@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "视频详情",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "u-navbar": "/uview-ui/components/u-navbar/u-navbar",
+    "u-tabs": "/uview-ui/components/u-tabs/u-tabs",
+    "u-icon": "/uview-ui/components/u-icon/u-icon",
+    "u-badge": "/uview-ui/components/u-badge/u-badge",
+    "u-popup": "/uview-ui/components/u-popup/u-popup"
+  }
+}
