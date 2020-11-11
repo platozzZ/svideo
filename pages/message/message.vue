@@ -29,6 +29,7 @@
 		<u-tabbar
 		    :list="vuex_tabbar"
 			:mid-button="vuex_midButton"
+			:mid-button-size="vuex_midButton_size"
 			:icon-size="vuex_iconsize"
 			@change="tabBarChange"
 		></u-tabbar>
@@ -113,13 +114,17 @@ export default {
 			}
 		}
 		&::after{
-			content: '';
+			content: ' ';
 			position: absolute;
-			bottom: 1rpx;
 			left: 130rpx;
-			width: calc(100% - 160rpx);
-			height: 1rpx;
-			background-color: #e4e7ed;
+			top: 0;
+			pointer-events: none;
+			transform-origin: 0 0;
+			width: calc(200% - 320rpx);
+			height: 200%;
+			transform: scale(0.5, 0.5);
+			border-bottom: 1rpx solid #e4e7ed;
+			z-index: 2;
 		}
 		.p-avatar{
 			width: 80rpx;

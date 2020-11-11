@@ -5,7 +5,13 @@
     "pages/add/add",
     "pages/message/message",
     "pages/mine/mine",
-    "pages/videoDetail/videoDetail"
+    "pages/order/order",
+    "pages/login/login",
+    "pages/login/success",
+    "pages/videoDetail/videoDetail",
+    "pages/integralMall/integralMall",
+    "pages/integralMall/mallDetail",
+    "pages/integral/integral"
   ],
   "subPackages": [],
   "window": {
@@ -19,7 +25,7 @@
     "selectedColor": "#000",
     "backgroundColor": "#fff",
     "midButton": {
-      "text": "发布"
+      "text": " "
     },
     "list": [
       {
@@ -41,5 +47,5 @@
     ]
   },
   "usingComponents": {},
-  "sitemapLocation": "sitemap32.json"
+  "sitemapLocation": "sitemap83.json"
 }

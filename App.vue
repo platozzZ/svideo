@@ -7,7 +7,11 @@ import Vue from 'vue'
 var that
 export default {
 	onLaunch: function() {
+		that = this
 		console.log('App Launch');
+		console.log(this);
+		console.log(that);
+		// that.newPromise()
 		// #ifdef MP-WEIXIN
 		// 获取小程序更新机制兼容
 		if (wx.canIUse('getUpdateManager')) {
@@ -61,25 +65,15 @@ export default {
 					  console.log(e);
 					if (e.code) {
 					  //调用登录接口
-					  uni.request({
-					  	url: 'https://shoplk.fblife.com/index.php?store_id=50&module=app&action=index&app=getopenid&code=' + e.code,
-					  	method: "GET",
-					  	header: {
-					  		'Content-Type': 'application/x-www-form-urlencoded'
-					  	},
-					  	success: (res) => {
-					  		console.log('request',res.data);
-					  		if(res.data.code == 200){
-								that.$u.vuex('openid', res.data.data.openid)
-					  			uni.setStorageSync('openid',res.data.data.openid)
-					  			that.getInfo(res.data.data.openid)
-								resolve(res.data);
-					  		} else {
-					  			// that.loginOpenid()
-					  		}
-					  		// this.text = 'request success';
-					  	}
-					  });
+					  // /api/user/getopenid
+						that.$u.post('/api/user/getopenid', {
+							code: e.code
+						},{
+							'Content-Type': 'application/x-www-form-urlencoded'
+						}).then(res => {
+							console.log('app-newPromise',res);
+							resolve(res)
+						});
 					  
 					} else {
 					  console.log('获取用户登录态失败！' + res.errMsg);

@@ -12,7 +12,7 @@ try{
 }
 
 // 需要永久存储，且下次APP启动需要取出的，在state中的变量名
-let saveStateKeys = ['openid', 'token'];
+let saveStateKeys = ['openid', 'token', 'isSwitch', 'userInfo'];
 
 // 保存变量到本地存储中
 const saveLifeData = function(key, value){
@@ -36,12 +36,16 @@ const store = new Vuex.Store({
 		// 如果vuex_version无需保存到本地永久存储，无需lifeData.vuex_version方式
 		vuex_version: '1.0.1',
 		vuex_demo: '绛紫',
+		userInfo: lifeData.userInfo ? lifeData.userInfo : '',
 		token: lifeData.token ? lifeData.token : '',
 		openid: lifeData.openid ? lifeData.openid : '',
+		isSwitch: lifeData.isSwitch ? lifeData.isSwitch : '',
 		// 自定义tabbar数据
 		vuex_midButton: true,
-		vuex_iconsize: '36',
-		vuex_tabbar: [{
+		vuex_midButton_size: '100',
+		vuex_iconsize: '44',
+		vuex_tabbar: [
+			{
 				pagePath: "/pages/index/index",
 				iconPath: "/static/image/tabbar/home.png",
 				selectedIconPath: "/static/image/tabbar/home_cur.png",
@@ -59,7 +63,7 @@ const store = new Vuex.Store({
 				// pagePath: "pages/add/add",
 				iconPath: "/static/image/tabbar/add.png",
 				selectedIconPath: "/static/image/tabbar/add.png",
-				text: '发布',
+				text: '',
 				midButton: true,
 				customIcon: false,
 			},

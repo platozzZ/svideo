@@ -49,7 +49,20 @@ page {
   -webkit-border-radius: 4rpx;
           border-radius: 4rpx;
 }
+.u-select-container {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+          flex: 1;
+  background-color: #F6F6F6;
+  padding: 0 20rpx;
+  -webkit-border-radius: 4rpx;
+          border-radius: 4rpx;
+  height: 70rpx;
+}
 .form-tips-color {
   color: #001C00;
+}
+.bg-disabled {
+  background-color: #c8c9cc;
 }
 

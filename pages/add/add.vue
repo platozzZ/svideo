@@ -2,20 +2,22 @@
 	<view class="">
 		<u-navbar title="发布视频"></u-navbar>
 		<view class="padding-tb-sm padding-lr">
-			<view class="video-container flex align-center justify-center" @click="addVideo" v-if="!model.videosrc">
+			<view class="video-container flex align-center justify-center" @click="addVideo" v-if="!model.video">
 				<u-icon name="plus" size="120" color="#c0c4cc"></u-icon>
 			</view>
 			<view class="" v-else>
-				<video :src="model.videosrc" class="video"></video>
+				<video :src="model.video" class="video"></video>
 			</view>
 		</view>
 		<view class="u-p-l-30 u-p-r-30 u-p-b-50">
 			<u-form :model="model" :rules="rules" ref="uForm" :label-style="labelStyle" :border-bottom="false" :label-position="'right'" :errorType="errorType">
-				<u-form-item :border-bottom="false"  label-width="120" label="视频标题" prop="name">
-					<u-input :border="border" :border-color="borderColor" placeholder="输入视频的标题，最多30个字" maxlength="30" v-model="model.name" type="text"></u-input>
+				<u-form-item :border-bottom="false" label-width="120" label="视频标题" prop="title">
+					<u-input :border="border" :border-color="borderColor" placeholder="输入视频的标题，最多30个字" maxlength="30" v-model="model.title" type="text"></u-input>
 				</u-form-item>
-				<u-form-item label-width="120" label="车辆类型" prop="name">
-					<view class="u-m-r-10">
+				<u-form-item :border-bottom="false" label-width="120" label="车辆类型" prop="name">
+					<!-- <view class="u-select-container" @click="showSelect"> {{selectResult}}</view> -->
+					<u-input :border="border" :border-color="borderColor" type="select" :select-open="selectShow" v-model="model.goodsType" placeholder="请选择车辆类型" @click="selectShow = true"></u-input>
+					<!-- <view class="u-m-r-10">
 						<u-input :border="border" :border-color="borderColor" type="select" :select-open="selectShow" v-model="model.goodsType" placeholder="品牌" @click="selectShow = true"></u-input>
 					</view>
 					<view class="u-m-r-10">
@@ -23,13 +25,13 @@
 					</view>
 					<view class="u-m-r-10">
 						<u-input :border="border" :border-color="borderColor" type="select" :select-open="selectShow" v-model="model.goodsType" placeholder="车系" @click="selectShow = true"></u-input>
-					</view>
+					</view> -->
 				</u-form-item>
-				<u-form-item :border-bottom="false"  label-width="120" label="4S店标题" prop="name">
-					<u-input :border="border" :border-color="borderColor" placeholder="输入4S店的标题，最多30个字" maxlength="30" v-model="model.name" type="text"></u-input>
+				<u-form-item :border-bottom="false" label-width="120" label="4S店标题" prop="ftitle">
+					<u-input :border="border" :border-color="borderColor" placeholder="输入4S店的标题，最多30个字" maxlength="30" v-model="model.ftitle" type="text"></u-input>
 				</u-form-item>
-				<u-form-item :border-bottom="false" label="发布时间" prop="time" label-width="150">
-					<u-input :border="border" :border-color="borderColor" type="select" :select-open="pickerShow" v-model="model.time" placeholder="请选择时间" @click="pickerShow = true"></u-input>
+				<u-form-item :border-bottom="false"label="发布时间" prop="nsendtime" label-width="150">
+					<u-input :border="border" :border-color="borderColor" type="select" :select-open="pickerShow" v-model="model.nsendtime" placeholder="请选择时间" @click="pickerShow = true"></u-input>
 				</u-form-item>
 			</u-form>
 			<view class="form-tips">
@@ -40,13 +42,17 @@
 					发布视频奖励100积分。如店铺当日剩余积分不足或已清零。您可以选择修改发布时间，来保障您的收益。
 				</view>
 			</view>
-			<u-select mode="single-column" :list="selectList" v-model="selectShow" @confirm="selectConfirm"></u-select>
-			<u-picker v-model="pickerShow" mode="time" @confirm="timeConfirm"></u-picker>
+			<!-- <u-select mode="single-column" :list="selectList" v-model="selectShow" @confirm="selectConfirm"></u-select> -->
+			<u-picker v-model="pickerShow" mode="time" :params="params" @confirm="timeConfirm"></u-picker>
+			<u-select :safe-area-inset-bottom="true" value-name="name" label-name="name" child-name="sub_type" v-model="selectShow" mode="mutil-column-auto" :list="selectList" @confirm="selectConfirm"></u-select>
 		</view>
 		<view class="footer">
 			<view class="footer-seat"></view>
 			<view class="footer-content flex align-center">
-				<view class="footer-btn bg-pyellow felx-sub">
+				<view class="footer-btn bg-disabled felx-sub" v-if="!model.video" @click="videoTips">
+					发布
+				</view>
+				<view class="footer-btn bg-pyellow felx-sub" @click="submit" v-else>
 					发布
 				</view>
 			</view>
@@ -60,187 +66,72 @@ export default {
 	data() {
 		return {
 			model: {
-				videosrc: '',
-				name: '',
-				sex: '',
-				likeFruit: '',
-				time: '',
-				intro: '',
-				payType: '支付宝',
-				agreement: false,
-				region: '',
 				goodsType: '',
-				phone: '',
-				code: '',
-				password: '',
-				rePassword: '',
-				remember: false,
-				photo: ''
+				user_id: '',// 用户id
+				title: '',// 视频标题
+				ftitle: '',// 4S店标题
+				video: '',// 视频文件
+				distributor_id: '',// 所属4s店id
+				longitude: '',// 经度
+				latitude: '',// 纬度
+				nclassify_id: '',// 一级标签id
+				nclassify_two_id: '',// 二级标签id
+				nclassify_three_id: '',// 三级标签id
+				nsendtime: '',// 发布时间
 			},
 			labelStyle: {
 				color: '#4C4C4C'
 			},
-			selectList: [
-				{
-					value: '电子产品',
-					label: '电子产品'
-				},
-				{
-					value: '服装',
-					label: '服装'
-				},
-				{
-					value: '工艺品',
-					label: '工艺品'
-				}
-			],
+			selectList: [],
 			rules: {
-				name: [
+				video: [
 					{
 						required: true,
-						message: '请输入姓名',
+						message: '视频不能为空',
+						trigger: ['blur', 'change'],
+					},
+					
+				],
+				title: [
+					{
+						required: true,
+						message: '请输入视频标题',
 						trigger: 'blur' ,
 					},
-					{
-						min: 3,
-						max: 5,
-						message: '姓名长度在3到5个字符',
-						trigger: ['change','blur'],
-					},
-					{
-						// 此为同步验证，可以直接返回true或者false，如果是异步验证，稍微不同，见下方说明
-						validator: (rule, value, callback) => {
-							// 调用uView自带的js验证规则，详见：https://www.uviewui.com/js/test.html
-							return this.$u.test.chinese(value);
-						},
-						message: '姓名必须为中文',
-						// 触发器可以同时用blur和change，二者之间用英文逗号隔开
-						trigger: ['change','blur'],
-					},
-					// 异步验证，用途：比如用户注册时输入完账号，后端检查账号是否已存在
-					// {
-					// 	trigger: ['blur'],
-					// 	// 异步验证需要通过调用callback()，并且在里面抛出new Error()
-					// 	// 抛出的内容为需要提示的信息，和其他方式的message属性的提示一样
-					// 	asyncValidator: (rule, value, callback) => {
-					// 		this.$u.post('/ebapi/public_api/index').then(res => {
-					// 			// 如果验证出错，需要在callback()抛出new Error('错误提示信息')
-					// 			if(res.error) {
-					// 				callback(new Error('姓名重复'));
-					// 			} else {
-					// 				// 如果没有错误，也要执行callback()回调
-					// 				callback();
-					// 			}
-					// 		})
-					// 	},
-					// }
 				],
-				sex: [
+				nclassify_id: [
 					{
 						required: true,
-						message: '请选择性别',
-						trigger: 'change'
-					},
-				],
-				intro: [
-					{
-						required: true,
-						message: '请填写简介'
-					},
-					{
-						min: 5,
-						message: '简介不能少于5个字',
-						trigger: 'change' ,
-					},
-					// 正则校验示例，此处用正则校验是否中文，此处仅为示例，因为uView有this.$u.test.chinese可以判断是否中文
-					{
-						pattern: /^[\u4e00-\u9fa5]+$/gi,
-						message: '简介只能为中文',
-						trigger: 'change',
-					},
-				],
-				likeFruit: [
-					{
-						required: true,
-						message: '请选择您喜欢的水果',
-						trigger: 'change',
-						type: 'array',
-					}
-				],
-				payType: [
-					{
-						required: true,
-						message: '请选择任意一种支付方式',
+						message: '请选择车辆类型',
 						trigger: 'change',
 					}
 				],
-				region: [
+				nclassify_two_id: [
 					{
 						required: true,
-						message: '请选择地区',
+						message: '请选择车辆类型',
 						trigger: 'change',
 					}
 				],
-				goodsType: [
+				nclassify_three_id: [
 					{
 						required: true,
-						message: '请选择商品类型',
+						message: '请选择车辆类型',
 						trigger: 'change',
 					}
 				],
-				phone: [
+				ftitle: [
 					{
 						required: true,
-						message: '请输入手机号',
-						trigger: ['change','blur'],
+						message: '请输入4S店的标题',
+						trigger: 'blur'
 					},
-					{
-						validator: (rule, value, callback) => {
-							// 调用uView自带的js验证规则，详见：https://www.uviewui.com/js/test.html
-							return this.$u.test.mobile(value);
-						},
-						message: '手机号码不正确',
-						// 触发器可以同时用blur和change，二者之间用英文逗号隔开
-						trigger: ['change','blur'],
-					}
 				],
-				code: [
+				nsendtime: [
 					{
 						required: true,
-						message: '请输入验证码',
-						trigger: ['change','blur'],
-					},
-					{
-						type: 'number',
-						message: '验证码只能为数字',
-						trigger: ['change','blur'],
-					}
-				],
-				password: [
-					{
-						required: true,
-						message: '请输入密码',
-						trigger: ['change','blur'],
-					},
-					{
-						// 正则不能含有两边的引号
-						pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]+\S{5,12}$/,
-						message: '需同时含有字母和数字，长度在6-12之间',
-						trigger: ['change','blur'],
-					}
-				],
-				rePassword: [
-					{
-						required: true,
-						message: '请重新输入密码',
-						trigger: ['change','blur'],
-					},
-					{
-						validator: (rule, value, callback) => {
-							return value === this.model.password;
-						},
-						message: '两次输入的密码不相等',
-						trigger: ['change','blur'],
+						message: '请选择发布时间',
+						trigger: 'change',
 					}
 				],
 			},
@@ -307,19 +198,28 @@ export default {
 			actionSheetShow: false,
 			pickerShow: false,
 			selectShow: false,
+			params: {
+				year: true,
+				month: true,
+				day: true,
+				hour: true,
+				minute: true,
+				second: true
+			},
+			selectResult: '请选择车辆类型',
 			radioCheckWidth: 'auto',
 			radioCheckWrap: false,
 			codeTips: '',
-			errorType: ['message'],
+			errorType: ['toast'],
 		};
 	},
 	onLoad() {
 		that = this
-	},
-	computed: {
-		borderCurrent() {
-			return this.border ? 0 : 1;
-		}
+		that.getType()
+		that.getLocations()
+		that.model.user_id = that.userInfo.user_id
+		that.model.distributor_id = that.userInfo.distributor_id
+		console.log(that.model)
 	},
 	onReady() {
 		this.$refs.uForm.setRules(this.rules);
@@ -333,38 +233,56 @@ export default {
 				success: function (res) {
 					console.log(res);
 					console.log(that.model);
-					console.log(that.model.videosrc);
-					that.model.videosrc = res.tempFilePath;
+					console.log(that.model.video);
+					that.model.video = res.tempFilePath;
 					// self.src = res.tempFilePath;
 				}
 			});
 		},
 		submit() {
-			this.$refs.uForm.validate(valid => {
+			that.$refs.uForm.validate(valid => {
 				if (valid) {
-					if(!this.model.agreement) return this.$u.toast('请勾选协议');
+					that.add(that.model)
 					console.log('验证通过');
 				} else {
 					console.log('验证失败');
 				}
 			});
 		},
-		// 点击actionSheet回调
-		actionSheetCallback(index) {
-			uni.hideKeyboard();
-			this.model.sex = this.actionSheetList[index].text;
+		add(data){ // 
+			console.log(data)
+			that.$u.post('/api/videofill/store',data).then(res => {
+				console.log('add',res);
+				
+			}).catch(err => {
+				console.log('add-catch', err);
+			});
 		},
-		// checkbox选择发生变化
-		checkboxGroupChange(e) {
-			this.model.likeFruit = e;
+		getLocations(){
+			console.log('getLocations');
+			uni.getLocation({
+			    success: function (res) {
+					console.log(res);
+					that.model.longitude = res.longitude
+					that.model.latitude = res.latitude
+			    },
+				fail(err){
+					console.log(err);
+				}
+			});
 		},
-		// radio选择发生变化
-		radioGroupChange(e) {
-			this.model.payType = e;
+		getType(){ // /api/video/type
+			let data = {distributor_id: that.userInfo.distributor_id}
+			console.log(data)
+			that.$u.post('/api/video/type',data).then(res => {
+				console.log('getType',res);
+				that.selectList = res
+			}).catch(err => {
+				console.log('getType-catch', err);
+			});
 		},
-		// 勾选版权协议
-		checkboxChange(e) {
-			this.model.agreement = e.value;
+		showSelect() {
+			that.selectShow = true;
 		},
 		// 选择地区回调
 		regionConfirm(e) {
@@ -372,60 +290,29 @@ export default {
 		},
 		timeConfirm(e){
 			console.log(e);
-			this.model.time = e.year + '-' + e.month + '-' + e.day;
+			that.model.nsendtime = e.year + '-' + e.month + '-' + e.day + ' ' + e.hour + ':' + e.minute + ':' + e.second;
 		},
 		// 选择商品类型回调
 		selectConfirm(e) {
-			this.model.goodsType = '';
+			console.log(e)
+			console.log(e[0])
+			console.log(e[0].value)
 			e.map((val, index) => {
-				this.model.goodsType += this.model.goodsType == '' ? val.label : '-' + val.label;
+				that.model.goodsType += that.model.goodsType == '' ? val.label : '-' + val.label;
+				if(index == 0){
+					that.model.nclassify_id = val.value;
+				} else if(index == 1){
+					that.model.nclassify_two_id = val.value
+				} else {
+					that.model.nclassify_three_id = val.value
+				}
 			})
+			// that.model.nclassify_id = e[0].value;
+			// that.model.nclassify_two_id = e[1].value;
+			// that.model.nclassify_three_id = e[3].value;
 		},
-		borderChange(index) {
-			this.border = !index;
-		},
-		radioCheckboxChange(index) {
-			if(index == 0) {
-				this.radioCheckWrap = false;
-				this.radioCheckWidth = 'auto';
-			} else if(index == 1) {
-				this.radioCheckWrap = true;
-				this.radioCheckWidth = 'auto';
-			} else if(index == 2) {
-				this.radioCheckWrap = false;
-				this.radioCheckWidth = '50%';
-			}
-		},
-		labelPositionChange(index) {
-			this.labelPosition = index == 0 ? 'left' : 'right';
-		},
-		codeChange(text) {
-			this.codeTips = text;
-		},
-		// 获取验证码
-		getCode() {
-			if(this.$refs.uCode.canGetCode) {
-				// 模拟向后端请求验证码
-				uni.showLoading({
-					title: '正在获取验证码',
-					mask: true
-				})
-				setTimeout(() => {
-					uni.hideLoading();
-					// 这里此提示会被this.start()方法中的提示覆盖
-					this.$u.toast('验证码已发送');
-					// 通知验证码组件内部开始倒计时
-					this.$refs.uCode.start();
-				}, 2000);
-			} else {
-				this.$u.toast('倒计时结束后再发送');
-			}
-		},
-		errorChange(index) {
-			if(index == 0) this.errorType = ['message'];
-			if(index == 1) this.errorType = ['toast'];
-			if(index == 2) this.errorType = ['border-bottom'];
-			if(index == 3) this.errorType = ['border'];
+		videoTips(){
+			that.$u.toast('请上传视频')
 		}
 	}
 };
@@ -454,7 +341,17 @@ page{
 		border-radius: 4rpx;
 	}
 }
+.u-select-container{
+	flex: 1;
+	background-color: #F6F6F6;
+	padding: 0 20rpx;
+	border-radius: 4rpx;
+	height: 70rpx;
+}
 .form-tips-color{
 	color: #001C00;
+}
+.bg-disabled{
+	background-color: $u-type-info-disabled;
 }
 </style>

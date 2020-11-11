@@ -36,6 +36,27 @@
 			}	
 		},
 		{
+			"path": "pages/order/order",
+			"style": {
+				"navigationBarTitleText": "我的订单",
+				"navigationStyle":"custom"
+			}	
+		},
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "登录",
+				"navigationStyle":"custom"
+			}	
+		},
+		{
+			"path": "pages/login/success",
+			"style": {
+				"navigationBarTitleText": "登录成功",
+				"navigationStyle":"custom"
+			}	
+		},
+		{
 			"path": "pages/videoDetail/videoDetail",
 			"style": {
 				"navigationBarTitleText": "视频详情",
@@ -76,7 +97,7 @@
 		"selectedColor": "#000",
 		"backgroundColor": "#fff",
 		"midButton": {
-			"text": "发布"
+			"text": " "
 		},
 		"list": [
 			{

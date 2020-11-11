@@ -2,14 +2,17 @@
 // 同时，我们也可以在此使用getApp().globalData，如果你把token放在getApp().globalData的话，也是可以使用的
 const install = (Vue, vm) => {
 	Vue.prototype.$u.http.setConfig({
-		baseUrl: 'https://api.youzixy.com',
+		baseUrl: 'https://jjsp.fblife.com',
+		showLoading: true, // 是否显示请求中的loading
+		loadingMask: true, // 展示loading的时候，是否给一个透明的蒙层，防止触摸穿透
+
 		// 如果将此值设置为true，拦截回调中将会返回服务端返回的所有数据response，而不是response.data
 		// 设置为true后，就需要在this.$u.http.interceptor.response进行多一次的判断，请打印查看具体值
 		// originalData: true, 
 		// 设置自定义头部content-type
-		// header: {
-		// 	'content-type': 'xxx'
-		// }
+		header: {
+			'content-type': 'application/json;charset=UTF-8'
+		},
 	});
 	// 请求拦截，配置Token等参数
 	Vue.prototype.$u.http.interceptor.request = (config) => {
@@ -28,16 +31,39 @@ const install = (Vue, vm) => {
 		// const token = uni.getStorageSync('token');
 		// config.header.token = token;
 		
+		// // 可以对某个url进行特别处理，此url参数为this.$u.get(url)中的url值
+		// if(config.url == '/user/login') config.header.noToken = true;
+		// // 最后需要将config进行return
+		// return config;
+		// // 如果return一个false值，则会取消本次请求
+		// // if(config.url == '/user/rest') return false; // 取消某次请求
 		return config; 
 	}
 	// 响应拦截，判断状态码是否通过
 	Vue.prototype.$u.http.interceptor.response = (res) => {
+		console.log('interceptor',res);
+		// console.log(Vue);
+		// console.log(Vue.prototype);
+		// console.log(Vue.prototype.$u);
+		// console.log(Vue.prototype.$u.toast);
 		// 如果把originalData设置为了true，这里得到将会是服务器返回的所有的原始数据
 		// 判断可能变成了res.statueCode，或者res.data.code之类的，请打印查看结果
-		if(res.code == 200) {
+		if(res.statusCode == 200) {
 			// 如果把originalData设置为了true，这里return回什么，this.$u.post的then回调中就会得到什么
 			return res.data;  
-		} else return false;
+		} else if(res.statusCode == 201){
+			// 假设201为token失效，这里跳转登录
+			vm.$u.toast(res.message);
+			setTimeout(() => {
+				// 此为uView的方法，详见路由相关文档
+				vm.$u.route('/pages/login/login')
+			}, 1500)
+			return false;
+		} else {
+			vm.$u.toast(res.message);
+			return false
+		}
+		// return false;
 	}
 }
 

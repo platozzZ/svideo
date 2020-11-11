@@ -106,21 +106,125 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
+
+
+
+
+var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 2));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };} //
 //
 //
 //
-var _default =
-{
-  onLaunch: function onLaunch() {
+var that;var _default = { onLaunch: function onLaunch() {that = this;
     console.log('App Launch');
+    console.log(this);
+    console.log(that);
+    // that.newPromise()
+
+    // 获取小程序更新机制兼容
+    if (wx.canIUse('getUpdateManager')) {
+      var updateManager = wx.getUpdateManager();
+      updateManager.onCheckForUpdate(function (res) {
+        // console.log(res)
+        // 请求完新版本信息的回调
+        if (res.hasUpdate) {
+          updateManager.onUpdateReady(function () {
+            wx.showModal({
+              title: '更新提示',
+              content: '新版本已经准备好，是否重启应用？',
+              success: function success(res) {
+                if (res.confirm) {
+                  // 新的版本已经下载好，调用 applyUpdate 应用新版本并重启
+                  updateManager.applyUpdate();
+                }
+              } });
+
+          });
+          updateManager.onUpdateFailed(function () {
+            // 新的版本下载失败
+            wx.showModal({
+              title: '已经有新版本了哟~',
+              content: '新版本已经上线啦~，请您删除当前小程序，重新搜索打开哟~' });
+
+          });
+        }
+      });
+    } else {
+      // 如果希望用户在最新版本的客户端上体验您的小程序，可以这样子提示
+      wx.showModal({
+        title: '提示',
+        content: '当前微信版本过低，无法使用该功能，请升级到最新微信版本后重试。' });
+
+    }
+
   },
   onShow: function onShow() {
     console.log('App Show');
   },
   onHide: function onHide() {
     console.log('App Hide');
-  } };exports.default = _default;
+  },
+  methods: {
+    newPromise: function newPromise() {
+      return new Promise(function (resolve, reject) {
+        // 调用登录接口
+        wx.login({
+          success: function success(e) {
+            console.log(e);
+            if (e.code) {
+              //调用登录接口
+              // /api/user/getopenid
+              that.$u.post('/api/user/getopenid', {
+                code: e.code },
+              {
+                'Content-Type': 'application/x-www-form-urlencoded' }).
+              then(function (res) {
+                console.log('app-newPromise', res);
+                resolve(res);
+              });
+
+            } else {
+              console.log('获取用户登录态失败！' + res.errMsg);
+              var res = {
+                status: 300,
+                data: '错误' };
+
+              reject('error');
+            }
+          } });
+
+      });
+    },
+
+    getInfo: function getInfo(e) {
+      // http://home-api.fblife.com/api/v1//user/wxlogin
+      uni.request({
+        url: 'https://home-api.fblife.com/api/v1/user/wxlogin',
+        method: "POST",
+        data: {
+          openid: e },
+
+        header: {
+          'Content-Type': 'application/x-www-form-urlencoded' },
+
+        success: function success(res) {
+          console.log('getInfo', res);
+          if (res.data.code == 201) {
+            uni.setStorageSync('userInfo', res.data.data);
+            uni.setStorageSync('token', res.data.data.token);
+            uni.setStorageSync('phone', res.data.data.phone);
+            that.globalData.userInfo = res.data.data;
+            that.globalData.token = res.data.data.token;
+            that.globalData.phone = res.data.data.phone;
+
+          } else {
+
+          } // that.loginOpenid()
+          // this.text = 'request success';
+        } });
+
+    } } };exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),
 /* 8 */

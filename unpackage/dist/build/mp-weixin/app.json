@@ -5,6 +5,9 @@
     "pages/add/add",
     "pages/message/message",
     "pages/mine/mine",
+    "pages/order/order",
+    "pages/login/login",
+    "pages/login/success",
     "pages/videoDetail/videoDetail",
     "pages/integralMall/integralMall",
     "pages/integralMall/mallDetail",
@@ -22,7 +25,7 @@
     "selectedColor": "#000",
     "backgroundColor": "#fff",
     "midButton": {
-      "text": "发布"
+      "text": " "
     },
     "list": [
       {

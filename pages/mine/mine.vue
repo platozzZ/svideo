@@ -2,10 +2,14 @@
 	<view class="">
 		<image src="../../static/image/mine-bg.png" class="bg" mode="widthFix"></image>
 		<view class="container">
-			<view class="header">
-				<view class=" flex flex-direction align-center">
+			<view class="header flex align-center justify-center">
+				<view class=" flex flex-direction align-center" v-if="!!userInfo">
+					<image :src="userInfo.photo" class="avatar"></image>
+					{{userInfo.username}}
+				</view>
+				<view class=" flex flex-direction align-center" @click="toLogin" v-else>
 					<image src="../../static/image/mine-avatar.png" class="avatar"></image>
-					晓兔芽
+					请登录
 				</view>
 			</view>
 			<view class="info flex align-center justify-between">
@@ -27,11 +31,11 @@
 			</view>
 			<view class="">
 				<u-grid :col="'4'" :border="false">
-					<u-grid-item v-for="(item,index) in gridList" :key="item.id" :custom-style="gridItemStyle">
+					<u-grid-item v-for="(item,index) in gridList" :key="item.id" :custom-style="gridItemStyle" @click="toRoute(item.id)">
 						<view class="grid-image-container">
 							<image :src="'../../static/image/mine/' + item.id + '.png'" class="grid-image" mode="widthFix"></image>
 						</view>
-						<view class="grid-text text-xs">{{item.name}}</view>
+						<view class="grid-text text-sm u-m-t-20 u-tips-color">{{item.name}}</view>
 					</u-grid-item>
 				</u-grid>
 			</view>
@@ -39,6 +43,7 @@
 		<u-tabbar
 			:list="vuex_tabbar"
 			:mid-button="vuex_midButton"
+			:mid-button-size="vuex_midButton_size"
 			:icon-size="vuex_iconsize"
 			@change="tabBarChange"
 		></u-tabbar>
@@ -83,6 +88,14 @@ export default {
 		},
 		toIntegral(){
 			that.$u.route('/pages/integral/integral');
+		},
+		toLogin(){
+			that.$u.route('/pages/login/login');
+		},
+		toRoute(e){
+			if(e == 'order'){
+				that.$u.route('/pages/order/order');
+			}
 		},
 	}
 }
@@ -134,12 +147,14 @@ page{
 		}
 	}
 	.grid-image-container{
-		flex: 1;
+		// flex: 1;
+		width: 68rpx;
+		height: 68rpx;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		.grid-image{
-			width: 50rpx;
+			width: 68rpx;
 			height: auto;
 		}
 	}

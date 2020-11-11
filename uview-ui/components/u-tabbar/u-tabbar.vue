@@ -257,9 +257,9 @@
 
 			&__circle__border {
 				border-radius: 100%;
-				width: 110rpx;
-				height: 110rpx;
-				top: -48rpx;
+				width: 120rpx;
+				height: 120rpx;
+				top: -38rpx;
 				position: absolute;
 				z-index: 4;
 				background-color: #ffffff;
@@ -284,20 +284,20 @@
 				position: relative;
 
 				&__button {
-					position: absolute;
-					top: 14rpx;
-					left: 50%;
-					transform: translateX(-50%);
+					// position: absolute;
+					// top: 14rpx;
+					// left: 50%;
+					// transform: translateX(-50%);
 				}
 
 				&__text {
 					color: $u-content-color;
 					font-size: 24rpx;
 					line-height: 28rpx;
-					position: absolute;
-					bottom: 14rpx;
-					left: 50%;
-					transform: translateX(-50%);
+					// position: absolute;
+					// bottom: 14rpx;
+					// left: 50%;
+					// transform: translateX(-50%);
 				}
 			}
 
@@ -312,15 +312,15 @@
 				/* #endif */
 
 				&__button {
-					width: 90rpx;
-					height: 90rpx;
+					width: 100rpx;
+					height: 100rpx;
 					border-radius: 100%;
 					@include vue-flex;
 					justify-content: center;
 					align-items: center;
 					position: absolute;
 					background-color: #ffffff;
-					top: -40rpx;
+					top: -28rpx;
 					left: 50%;
 					z-index: 6;
 					transform: translateX(-50%);

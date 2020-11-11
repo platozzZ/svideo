@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "登录成功",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "u-navbar": "/uview-ui/components/u-navbar/u-navbar",
+    "u-button": "/uview-ui/components/u-button/u-button"
+  }
+}

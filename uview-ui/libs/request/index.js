@@ -64,6 +64,9 @@ class Request {
 						}
 					} else {
 						// 不返回原始数据的情况下，服务器状态码不为200，modal弹框提示
+						uni.showModal({
+							title: response.data.message
+						});
 						// if(response.errMsg) {
 						// 	uni.showModal({
 						// 		title: response.errMsg

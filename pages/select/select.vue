@@ -55,6 +55,7 @@
 		<u-tabbar
 		    :list="vuex_tabbar"
 			:mid-button="vuex_midButton"
+			:mid-button-size="vuex_midButton_size"
 			:icon-size="vuex_iconsize"
 			@change="tabBarChange"
 		></u-tabbar>
@@ -76,7 +77,7 @@ export default {
 				}, {
 					name:  '最热'
 				}, {
-					name: '附件'
+					name: '附近'
 				},{
 					name: '关注'
 				}

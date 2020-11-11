@@ -39,13 +39,19 @@
   display: none;
 }
 .p-list .p-item::after {
-  content: '';
+  content: ' ';
   position: absolute;
-  bottom: 1rpx;
   left: 130rpx;
-  width: calc(100% - 160rpx);
-  height: 1rpx;
-  background-color: #e4e7ed;
+  top: 0;
+  pointer-events: none;
+  -webkit-transform-origin: 0 0;
+          transform-origin: 0 0;
+  width: calc(200% - 320rpx);
+  height: 200%;
+  -webkit-transform: scale(0.5, 0.5);
+          transform: scale(0.5, 0.5);
+  border-bottom: 1rpx solid #e4e7ed;
+  z-index: 2;
 }
 .p-list .p-item .p-avatar {
   width: 80rpx;

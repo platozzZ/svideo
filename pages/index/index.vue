@@ -14,7 +14,7 @@
 		<view class="container">
 			<view class="padding-tb-sm padding-lr">
 				<u-swiper :height="320" :list="swiperList" :title="title"
-				 :title-style="swiperStyle" :interval="30000"></u-swiper>
+				 :title-style="swiperStyle" name="cf_image" :interval="30000"></u-swiper>
 			</view>
 			<view class="">
 				<u-grid :col="'4'" :border="false">
@@ -22,7 +22,7 @@
 						<view class="grid-image-container">
 							<image :src="'../../static/image/nav/p-' + item.id + '.png'" class="grid-image" mode="widthFix"></image>
 						</view>
-						<view class="grid-text text-xs">{{item.name}}</view>
+						<view class="grid-text text-xs u-m-t-20 u-tips-color">{{item.name}}</view>
 					</u-grid-item>
 				</u-grid>
 			</view>
@@ -66,6 +66,7 @@
 		<u-tabbar
 		    :list="vuex_tabbar"
 			:mid-button="vuex_midButton"
+			:mid-button-size="vuex_midButton_size"
 			:icon-size="vuex_iconsize"
 			@change="tabBarChange"
 		></u-tabbar>
@@ -90,19 +91,7 @@ export default {
 			},
 			keyword: '',
 			showAction: false,
-			swiperList: [{
-					image: 'https://cdn.uviewui.com/uview/swiper/1.jpg',
-					title: '昨夜星辰昨夜风，画楼西畔桂堂东'
-				},
-				{
-					image: 'https://cdn.uviewui.com/uview/swiper/2.jpg',
-					title: '身无彩凤双飞翼，心有灵犀一点通'
-				},
-				{
-					image: 'https://cdn.uviewui.com/uview/swiper/3.jpg',
-					title: '谁念西风独自凉，萧萧黄叶闭疏窗，沉思往事立残阳'
-				}
-			],
+			swiperList: [],
 			swiperStyle: {
 				textAlign: 'center',
 				paddingBottom: '32rpx'
@@ -197,17 +186,39 @@ export default {
 		// #ifdef MP-WEIXIN
 		getApp().newPromise().then(function (res) {
 		    console.log('newPromise:',res);
-		    if (res.code == 200){
-			// that.getIndex()
-				
-		    }else{
-		        console.log(res.data);
-		    }
+			that.$u.vuex('openid', res.openid)
+			that.$u.vuex('isSwitch', res.switch)
+		    
 		});
 		// #endif
-		this.addRandomData();
+		that.getList();
+		that.getBanner()
+		console.log(that);
 	},
 	methods: {
+		getBanner(){
+			that.$u.get('/api/carouselfigure/list').then(res => {
+				console.log('getBanner',res);
+				let list = res
+				list.map((item,index) => {
+					item.title = item.cf_title
+				})
+				that.swiperList = list
+			}).catch(err => {
+				console.log('getBanner-catch', err);
+			});
+		},
+		getList(){
+			that.$u.post('/api/video/list_new').then(res => {
+				console.log('getList',res);
+				
+			}).catch(err => {
+				console.log('getList-catch', err);
+			});
+			// this.$u.api.getInfo({id: 3}).then(res => {
+			// 	console.log(res);
+			// })
+		},
 		addRandomData() {
 			for (let i = 0; i < 10; i++) {
 				let index = this.$u.random(0, this.list.length - 1);
@@ -279,13 +290,15 @@ page{
 	}
 }
 .grid-image-container{
-	flex: 1;
+	// flex: 1;
+	width: 80rpx;
+	height: 50rpx;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	.grid-image{
-		width: 50rpx;
 		height: auto;
+		width: 50rpx;
 	}
 }
 .u-waterfall{
