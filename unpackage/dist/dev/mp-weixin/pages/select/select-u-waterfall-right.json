@@ -4,7 +4,6 @@
     "select-u-waterfall-left": "/pages/select/select-u-waterfall-left",
     "select-u-waterfall-right": "/pages/select/select-u-waterfall-right",
     "u-navbar": "/uview-ui/components/u-navbar/u-navbar",
-    "u-search": "/uview-ui/components/u-search/u-search",
     "u-sticky": "/uview-ui/components/u-sticky/u-sticky",
     "u-tabs": "/uview-ui/components/u-tabs/u-tabs",
     "u-waterfall": "/uview-ui/components/u-waterfall/u-waterfall",

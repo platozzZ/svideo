@@ -15,7 +15,10 @@ var _App = _interopRequireDefault(__webpack_require__(/*! ./App */ 5));
 var _uviewUi = _interopRequireDefault(__webpack_require__(/*! uview-ui */ 13));
 
 
-var _store = _interopRequireDefault(__webpack_require__(/*! @/store */ 39));
+var _locations = _interopRequireDefault(__webpack_require__(/*! ./common/locations.js */ 39));
+
+
+var _store = _interopRequireDefault(__webpack_require__(/*! @/store */ 40));
 
 
 
@@ -27,11 +30,11 @@ var _store = _interopRequireDefault(__webpack_require__(/*! @/store */ 39));
 
 
 
-var _httpInterceptor = _interopRequireDefault(__webpack_require__(/*! @/common/http.interceptor.js */ 41));
+var _httpInterceptor = _interopRequireDefault(__webpack_require__(/*! @/common/http.interceptor.js */ 42));
 
 
 
-var _httpApi = _interopRequireDefault(__webpack_require__(/*! @/common/http.api.js */ 42));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}_vue.default.config.productionTip = false;_vue.default.use(_uviewUi.default);var vuexStore = __webpack_require__(/*! @/store/$u.mixin.js */ 43);_vue.default.mixin(vuexStore);_App.default.mpType = 'app';var app = new _vue.default(_objectSpread({ store: _store.default }, _App.default)); // http拦截器，将此部分放在new Vue()和app.$mount()之间，才能App.vue中正常使用
+var _httpApi = _interopRequireDefault(__webpack_require__(/*! @/common/http.api.js */ 43));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}_vue.default.config.productionTip = false;_vue.default.use(_uviewUi.default);_vue.default.prototype.$getSetting = _locations.default;var vuexStore = __webpack_require__(/*! @/store/$u.mixin.js */ 44);_vue.default.mixin(vuexStore);_App.default.mpType = 'app';var app = new _vue.default(_objectSpread({ store: _store.default }, _App.default)); // http拦截器，将此部分放在new Vue()和app.$mount()之间，才能App.vue中正常使用
 _vue.default.use(_httpInterceptor.default, app); // http接口API抽离，免于写url或者一些固定的参数
 _vue.default.use(_httpApi.default, app);
 createApp(app).$mount();

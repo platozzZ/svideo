@@ -5,32 +5,43 @@
 			<view class="video-container flex align-center justify-center" @click="addVideo" v-if="!model.video">
 				<u-icon name="plus" size="120" color="#c0c4cc"></u-icon>
 			</view>
-			<view class="" v-else>
+			<view class="u-rela" v-else>
 				<video :src="model.video" class="video"></video>
+				<cover-view class="delete u-abso"  @tap.stop="deleteVideo">
+					<u-icon name="close" size="20" color="#ffffff"></u-icon>
+				</cover-view>
 			</view>
+			<view class="tips u-tips-color flex align-center justify-end u-p-t-10 u-font-10">*视频大小不能超过100M</view>
 		</view>
 		<view class="u-p-l-30 u-p-r-30 u-p-b-50">
 			<u-form :model="model" :rules="rules" ref="uForm" :label-style="labelStyle" :border-bottom="false" :label-position="'right'" :errorType="errorType">
+				<u-form-item :border-bottom="false" label-width="120" label="视频封面" prop="cover_image">
+					<view class="flex align-center">
+						<!-- @on-success="onSuccess"
+						@on-list-change="onListChange" -->
+						<u-upload name="cover_image" width="160" height="160" max-count="1" :custom-btn="true" upload-text=" " :show-progress="false"
+						
+							action="https://jjsp.fblife.com/api/videofill/upload_img"
+							@on-remove="onRemove" 
+							@on-change="onChange" 
+						>
+							<view slot="addBtn" class="slot-btn" hover-class="slot-btn__hover" hover-stay-time="150">
+								<u-icon name="plus" size="60" color="#c0c4cc"></u-icon>
+							</view>
+						</u-upload>
+						<view class="u-p-l-10 u-tips-color u-font-12" style="line-height: 1.5;">上传视频封面，如果不上传，系统将自动截取</view>
+					</view>
+				</u-form-item>
 				<u-form-item :border-bottom="false" label-width="120" label="视频标题" prop="title">
 					<u-input :border="border" :border-color="borderColor" placeholder="输入视频的标题，最多30个字" maxlength="30" v-model="model.title" type="text"></u-input>
 				</u-form-item>
 				<u-form-item :border-bottom="false" label-width="120" label="车辆类型" prop="name">
-					<!-- <view class="u-select-container" @click="showSelect"> {{selectResult}}</view> -->
 					<u-input :border="border" :border-color="borderColor" type="select" :select-open="selectShow" v-model="model.goodsType" placeholder="请选择车辆类型" @click="selectShow = true"></u-input>
-					<!-- <view class="u-m-r-10">
-						<u-input :border="border" :border-color="borderColor" type="select" :select-open="selectShow" v-model="model.goodsType" placeholder="品牌" @click="selectShow = true"></u-input>
-					</view>
-					<view class="u-m-r-10">
-						<u-input :border="border" :border-color="borderColor" type="select" :select-open="selectShow" v-model="model.goodsType" placeholder="车型" @click="selectShow = true"></u-input>
-					</view>
-					<view class="u-m-r-10">
-						<u-input :border="border" :border-color="borderColor" type="select" :select-open="selectShow" v-model="model.goodsType" placeholder="车系" @click="selectShow = true"></u-input>
-					</view> -->
 				</u-form-item>
 				<u-form-item :border-bottom="false" label-width="120" label="4S店标题" prop="ftitle">
 					<u-input :border="border" :border-color="borderColor" placeholder="输入4S店的标题，最多30个字" maxlength="30" v-model="model.ftitle" type="text"></u-input>
 				</u-form-item>
-				<u-form-item :border-bottom="false"label="发布时间" prop="nsendtime" label-width="150">
+				<u-form-item :border-bottom="false" label-width="150" label="发布时间" prop="nsendtime">
 					<u-input :border="border" :border-color="borderColor" type="select" :select-open="pickerShow" v-model="model.nsendtime" placeholder="请选择时间" @click="pickerShow = true"></u-input>
 				</u-form-item>
 			</u-form>
@@ -44,7 +55,7 @@
 			</view>
 			<!-- <u-select mode="single-column" :list="selectList" v-model="selectShow" @confirm="selectConfirm"></u-select> -->
 			<u-picker v-model="pickerShow" mode="time" :params="params" @confirm="timeConfirm"></u-picker>
-			<u-select :safe-area-inset-bottom="true" value-name="name" label-name="name" child-name="sub_type" v-model="selectShow" mode="mutil-column-auto" :list="selectList" @confirm="selectConfirm"></u-select>
+			<u-select :safe-area-inset-bottom="true" value-name="id" label-name="name" child-name="sub_type" v-model="selectShow" mode="mutil-column-auto" :list="selectList" @confirm="selectConfirm"></u-select>
 		</view>
 		<view class="footer">
 			<view class="footer-seat"></view>
@@ -57,6 +68,15 @@
 				</view>
 			</view>
 		</view>
+		<u-toast ref="uToast" />
+		<u-modal ref="uModal" 
+		v-model="modalShow" 
+		:show-cancel-button="true"
+			:show-title="false" 
+			:async-close="true"
+			@confirm="modalConfirm" 
+			:content="modalContent"
+		/>
 	</view>
 </template>
 
@@ -71,9 +91,10 @@ export default {
 				title: '',// 视频标题
 				ftitle: '',// 4S店标题
 				video: '',// 视频文件
+				cover_image: '',
 				distributor_id: '',// 所属4s店id
-				longitude: '',// 经度
-				latitude: '',// 纬度
+				longitude: '105.156525',// 经度
+				latitude: '38.668237',// 纬度
 				nclassify_id: '',// 一级标签id
 				nclassify_two_id: '',// 二级标签id
 				nclassify_three_id: '',// 三级标签id
@@ -137,65 +158,6 @@ export default {
 			},
 			border: true,
 			borderColor: '#F6F6F6',
-			check: false,
-			selectStatus: 'close',
-			checkboxList: [
-				{
-					name: '荔枝',
-					checked: false,
-					disabled: false
-				},
-				{
-					name: '香蕉',
-					checked: false,
-					disabled: false
-				},
-				{
-					name: '橙子',
-					checked: false,
-					disabled: false
-				},
-				{
-					name: '草莓',
-					checked: false,
-					disabled: false
-				}
-			],
-			radioList: [
-				{
-					name: '支付宝',
-					checked: true,
-					disabled: false
-				},
-				{
-					name: '微信',
-					checked: false,
-					disabled: false
-				},
-				{
-					name: '银联',
-					checked: false,
-					disabled: false
-				},
-				{
-					name: '现金',
-					checked: false,
-					disabled: false
-				}
-			],
-			radio: '支付宝',
-			actionSheetList: [
-				{
-					text: '男'
-				},
-				{
-					text: '女'
-				},
-				{
-					text: '保密'
-				}
-			],
-			actionSheetShow: false,
 			pickerShow: false,
 			selectShow: false,
 			params: {
@@ -207,10 +169,13 @@ export default {
 				second: true
 			},
 			selectResult: '请选择车辆类型',
-			radioCheckWidth: 'auto',
-			radioCheckWrap: false,
 			codeTips: '',
 			errorType: ['toast'],
+			
+			modalShow: false,
+			modalContent: '确认删除视频吗？',
+			// percent: 0,
+			// progressType: 'success'
 		};
 	},
 	onLoad() {
@@ -251,12 +216,45 @@ export default {
 		},
 		add(data){ // 
 			console.log(data)
-			that.$u.post('/api/videofill/store',data).then(res => {
-				console.log('add',res);
-				
-			}).catch(err => {
-				console.log('add-catch', err);
-			});
+			  // that.$refs.uUpload.upload();
+			let uploadTask = uni.uploadFile({
+				url: "https://jjsp.fblife.com/api/videofill/store",
+				formData: data,
+				filePath: data.video,
+				name: "video",
+				success: res => {
+					console.log('uploadTask',res);
+					// if (JSON.parse(res.data).code == 201) {}
+					if (res.statusCode == 200) {
+						let art = JSON.parse(res.data)
+						console.log(art)
+						if (art.statusCode == 200) {
+							that.showToast("发布成功，等待审核",'success',true) 
+							// that.progressType = 'success'
+						} else {
+							that.showToast(art.message,'warning',true)
+							// that.progressType = 'warning'
+						}
+					} else {
+						that.showToast('文件过大','error')
+						// that.progressType = 'error'
+					}
+				}
+			  });
+			  uploadTask.onProgressUpdate(res => {
+				  console.log(res)
+				  if(res.progress < 100){
+					  uni.showLoading({
+						title: '上传中...'
+					})
+				  } else {
+					  uni.hideLoading()
+				  }
+			  });
+		},
+		deleteVideo(){
+			console.log('deleteVideo')
+			that.showModal()
 		},
 		getLocations(){
 			console.log('getLocations');
@@ -284,16 +282,22 @@ export default {
 		showSelect() {
 			that.selectShow = true;
 		},
-		// 选择地区回调
-		regionConfirm(e) {
-			this.model.region = e.province.label + '-' + e.city.label + '-' + e.area.label;
-		},
 		timeConfirm(e){
 			console.log(e);
 			that.model.nsendtime = e.year + '-' + e.month + '-' + e.day + ' ' + e.hour + ':' + e.minute + ':' + e.second;
 		},
+		showModal(){
+			that.modalShow = true;
+		},
+		modalConfirm(e){
+			setTimeout(() => {
+				that.modalShow = false;
+				that.model.video = ''
+			}, 1500)
+		},
 		// 选择商品类型回调
 		selectConfirm(e) {
+			that.model.goodsType = ''
 			console.log(e)
 			console.log(e[0])
 			console.log(e[0].value)
@@ -311,9 +315,98 @@ export default {
 			// that.model.nclassify_two_id = e[1].value;
 			// that.model.nclassify_three_id = e[3].value;
 		},
+		
+		onSuccess(data, index, lists) {
+			console.log('onSuccess-data', data);
+			console.log('onSuccess-index', index);
+			console.log('onSuccess-lists', lists);
+		},
+		onChange(res, index, lists, name){
+			let art = JSON.parse(res.data);
+			if(art.statusCode == 200){
+				that.model.cover_image = art.data.img_url
+			} else {
+				that.showToast(res.response.message,'error')
+			}
+			// console.log('onChange-art', art);
+			// console.log('onChange-res', res);
+			// console.log('onChange-index', index);
+			// console.log('onChange-lists', lists);
+			// console.log('onChange-name', name);
+		},
+		onRemove(index, lists, name){
+			that.model.cover_image = ''
+			// console.log(lists.length);
+			// console.log('onRemove-index', index);
+			// console.log('onRemove-lists', lists);
+			// console.log('onRemove-name', name);
+		},
+		onListChange(lists,name) {
+			console.log('onListChange', lists);
+			console.log('onListChange', lists.length);
+			console.log('onListChange-name', name);
+			if(lists.length == 0){
+				that.model.cover_image = ''
+				console.log(that.model);
+				return
+			}
+				console.log(that.model);
+			let res = lists[0]
+			if(res.response.statusCode == 200){
+				that.model.cover_image = res.response.data.img_url
+			} else {
+				that.showToast(res.response.message,'error')
+			}
+		},
+		btop(base64) {
+			console.log(base64);
+			// this.base64 = base64;
+			return new Promise(function(resolve, reject) {
+				var arr = base64.split(','),
+					mime = arr[0].match(/:(.*?);/)[1],
+					bstr = atob(arr[1]),
+					n = bstr.length,
+					u8arr = new Uint8Array(n);
+				while (n--) {
+					u8arr[n] = bstr.charCodeAt(n);
+				}
+				return resolve((window.URL || window.webkitURL).createObjectURL(new Blob([u8arr], {
+					type: mime
+				})));
+			});
+		},
+		base64(path){
+		    return new Promise((resolve, reject) => {
+		        uni.getFileSystemManager().readFile({
+					filePath: path, //选择图片返回的相对路径
+					encoding: 'base64', //编码格式
+					success: res => {
+						resolve('data:image/;base64,' + res.data)
+					},
+					fail: res => reject(res.errMsg)
+		        })
+		    })
+		},
 		videoTips(){
 			that.$u.toast('请上传视频')
-		}
+		},
+		showToast(title,type,back) {
+			if(back){
+				that.$refs.uToast.show({
+					title: title,
+					type: type,
+					icon: false,
+					// back: true
+				})
+			} else {
+				that.$refs.uToast.show({
+					title: title,
+					type: type,
+					icon: false
+				})
+			}
+			
+		},
 	}
 };
 </script>
@@ -321,6 +414,18 @@ export default {
 <style lang="scss">
 page{
 	background-color: #fff;
+}
+.delete{
+	top: -10rpx;
+	right: -10rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #fff;
+	background-color: #fa3534;
+	padding: 10rpx;
+	border-radius: 50%;
+	z-index: 99999;
 }
 .video-container{
 	width: 100%;
@@ -339,6 +444,20 @@ page{
 		background-color: #F6F6F6;
 		padding: 0 30rpx;
 		border-radius: 4rpx;
+	}
+	
+	.slot-btn {
+		width: 160rpx;
+		height: 160rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background: rgb(244, 245, 246);
+		border-radius: 10rpx;
+	}
+	
+	.slot-btn__hover {
+		background-color: rgb(235, 236, 238);
 	}
 }
 .u-select-container{

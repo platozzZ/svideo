@@ -45,6 +45,11 @@
         "appid" : "wx1adbc1cc57727c93",
         "setting" : {
             "urlCheck" : true
-        }
+        },
+		"permission": {
+		  "scope.userLocation": {
+		   "desc": "获取位置信息"
+		  }
+		 }
     }
 }

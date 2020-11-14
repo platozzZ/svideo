@@ -413,6 +413,9 @@ export default {
 			this.lists[index].error = false;
 			this.uploading = true;
 			// 创建上传对象
+			// console.log(this.action);
+			// console.log(this.name);
+			// console.log(this.lists[index].url);
 			const task = uni.uploadFile({
 				url: this.action,
 				filePath: this.lists[index].url,

@@ -11,7 +11,14 @@
     "pages/videoDetail/videoDetail",
     "pages/integralMall/integralMall",
     "pages/integralMall/mallDetail",
-    "pages/integral/integral"
+    "pages/integral/integral",
+    "pages/business/business",
+    "pages/mineList/collect",
+    "pages/mineList/history",
+    "pages/mineList/feedback",
+    "pages/mineList/report",
+    "pages/mineList/poster",
+    "pages/mineList/review"
   ],
   "subPackages": [],
   "window": {
@@ -46,6 +53,11 @@
       }
     ]
   },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "获取位置信息"
+    }
+  },
   "usingComponents": {},
-  "sitemapLocation": "sitemap83.json"
+  "sitemapLocation": "sitemap54.json"
 }

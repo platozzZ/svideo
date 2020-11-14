@@ -17,13 +17,13 @@
 }
 .footer-content{
 	position: fixed;
-	bottom: 0;
 	left: 0;
 	width: 100%;
 	height: 90rpx;
 	z-index: 5;
 	bottom: calc(constant(safe-area-inset-bottom) / 2);
 	bottom: calc(env(safe-area-inset-bottom) / 2);
+	background-color: #fff;
 }
 .footer-btn{
 	width: 100%;

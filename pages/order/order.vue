@@ -320,9 +320,6 @@ export default {
 				{
 					name: '待收货'
 				},
-				{
-					name: '待评价'
-				}
 			],
 			current: 0,
 			swiperCurrent: 0,

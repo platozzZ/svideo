@@ -84,6 +84,55 @@
 				"navigationBarTitleText": "积分明细",
 				"navigationStyle":"custom"
 			}	
+		},
+		{
+			"path": "pages/business/business",
+			"style": {
+				"navigationBarTitleText": "商家入驻",
+				"navigationStyle":"custom"
+			}	
+		},
+		{
+			"path": "pages/mineList/collect",
+			"style": {
+				"navigationBarTitleText": "我的收藏",
+				"navigationStyle":"custom"
+			}	
+		},
+		{
+			"path": "pages/mineList/history",
+			"style": {
+				"navigationBarTitleText": "浏览历史",
+				"navigationStyle":"custom"
+			}	
+		},
+		{
+			"path": "pages/mineList/feedback",
+			"style": {
+				"navigationBarTitleText": "意见反馈",
+				"navigationStyle":"custom"
+			}	
+		},
+		{
+			"path": "pages/mineList/report",
+			"style": {
+				"navigationBarTitleText": "举报",
+				"navigationStyle":"custom"
+			}	
+		},
+		{
+			"path": "pages/mineList/poster",
+			"style": {
+				"navigationBarTitleText": "我的转发",
+				"navigationStyle":"custom"
+			}	
+		},
+		{
+			"path": "pages/mineList/review",
+			"style": {
+				"navigationBarTitleText": "我的视频",
+				"navigationStyle":"custom"
+			}	
 		}
 	],
 	"globalStyle": {
@@ -121,5 +170,10 @@
 	"easycom": {
 		"^uni-(.*)": "@/components/uni-$1/uni-$1.vue",
 		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
-	}
+	},
+	"permission": {
+		"scope.userLocation": {
+			"desc": "获取您的位置" // 高速公路行驶持续后台定位
+		}
+	  }
 }

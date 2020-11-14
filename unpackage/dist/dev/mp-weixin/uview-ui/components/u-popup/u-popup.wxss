@@ -97,7 +97,6 @@
   min-height: 100rpx;
   display: block;
   position: relative;
-  background-color: #ffffff;
 }
 .u-drawer-content-visible.u-drawer-center.data-v-17becaea {
   -webkit-transform: scale(1);

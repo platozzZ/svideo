@@ -57,8 +57,8 @@ export default {
 	data() {
 		return {
 			gridList: [
-				{name:'我的订单',id: 'order'},{name:'我的收藏',id: 'collect'},{name:'审核列表',id: 'review'},{name:'播放历史',id: 'history'},
-				{name:'我的海报',id: 'poster'},{name:'意见反馈',id: 'feedback'},{name:'举报',id: 'report'}
+				{name:'我的订单',id: 'order'},{name:'我的收藏',id: 'collect'},{name:'我的视频',id: 'review'},{name:'播放历史',id: 'history'},
+				{name:'我的转发',id: 'poster'},{name:'意见反馈',id: 'feedback'},{name:'举报',id: 'report'},{name:'商家入驻',id: 'business'}
 			],
 			gridItemStyle: {
 				padding: '15rpx 0',
@@ -93,9 +93,42 @@ export default {
 			that.$u.route('/pages/login/login');
 		},
 		toRoute(e){
-			if(e == 'order'){
-				that.$u.route('/pages/order/order');
+			console.log(e);
+			switch(e){
+				case 'order':
+					that.$u.route('/pages/order/order');
+					break;
+				case 'business':
+					that.$u.route('/pages/business/business');
+					break;
+				case 'collect':
+					that.$u.route('/pages/mineList/collect');
+					break;
+				case 'history':
+					that.$u.route('/pages/mineList/history');
+					break;
+				case 'feedback':
+					that.$u.route('/pages/mineList/feedback');
+					break;
+				case 'report':
+					that.$u.route('/pages/mineList/report');
+					break;
+				case 'poster':
+					that.$u.route('/pages/mineList/poster');
+					break;
+				case 'review':
+					that.$u.route('/pages/mineList/review');
+					break;
 			}
+			// if(e == 'order'){
+			// 	that.$u.route('/pages/order/order');
+			// } else if(e == 'business'){
+			// 	that.$u.route('/pages/business/business');
+				
+			// } else if(e == 'collect'){
+			// 	that.$u.route('/pages/mineList/collect');
+				
+			// }
 		},
 	}
 }

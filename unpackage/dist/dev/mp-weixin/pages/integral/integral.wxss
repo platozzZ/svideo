@@ -55,6 +55,6 @@ page {
   border: 1rpx solid #FFD524;
   -webkit-border-radius: 4rpx;
           border-radius: 4rpx;
-  margin: 50rpx 0;
+  margin: 20rpx 0;
 }
 

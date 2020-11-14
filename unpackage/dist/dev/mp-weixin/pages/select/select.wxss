@@ -35,6 +35,9 @@ page {
   -webkit-box-align: center;
   -webkit-align-items: center;
           align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
   -webkit-box-flex: 1;
   -webkit-flex: 1;
           flex: 1;
@@ -52,9 +55,9 @@ page {
  .u-tab-item::after {
   content: '';
   position: absolute;
-  right: 1rpx;
+  right: 0;
   top: 25rpx;
-  width: 1rpx;
+  width: 2rpx;
   height: 30rpx;
   background-color: #909399;
 }

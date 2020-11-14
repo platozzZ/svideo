@@ -2,54 +2,55 @@
 	<view class="">
 		<u-navbar :is-back="false">
 			<view class="slot-wrap">
-				<view class="">
+				<!-- <view class=""> -->
 					<image src="../../static/image/logo.png" class="logo"></image>
-				</view>
-				<view class="search-wrap">
-					<!-- 如果使用u-search组件，必须要给v-model绑定一个变量 -->
+				<!-- </view> -->
+				<!-- <view class="search-wrap">
 					<u-search v-model="keyword" :show-action="showAction" height="56" :action-style="{color: '#fff'}"></u-search>
-				</view>
+				</view> -->
 			</view>
 		</u-navbar>
-		<u-sticky>
+		<u-sticky  offset-top="0">
 			<u-tabs bg-color="#fff" inactive-color="#909399" active-color="#303030" :active-item-style="activeStyle" :show-bar="false" font-size="28" :list="tabList"
 			@change="tabChange" :current="current" :is-scroll="isScroll"></u-tabs>
 		</u-sticky>
 		<view class="">
 			<u-waterfall v-model="flowList" ref="uWaterfall">
 				<template v-slot:left="{ leftList }">
-					<view class="demo-warter" v-for="(item, index) in leftList" :key="index">
+					<view class="demo-warter" v-for="(item, index) in leftList" :key="item.guid_id" @click="toDetail(item.id)">
 						<!-- 微信小程序需要hx2.8.11版本才支持在template中引入其他组件，比如下方的u-lazy-load组件 -->
-						<u-lazy-load threshold="-450" border-radius="10" :image="item.image" :index="index"></u-lazy-load>
-						<view class="demo-title">{{ item.title }}</view>
-						<view class="demo-bottom margin-top-sm flex align-center justify-between">
+						<u-lazy-load threshold="-450" border-radius="10" :image="item.nimages" :index="item.guid_id"></u-lazy-load>
+						<view class="demo-title u-p-l-10 u-p-r-10">{{ item.ntitle }}</view>
+						<view class="demo-bottom margin-top-sm flex align-center justify-between u-p-l-10 u-p-r-10">
 							<view class="avatar-container flex align-center text-pgray text-sm">
-								<image :src="item.image" class="avatar margin-right-xs"></image>
-								叽里咕噜
+								<image :src="item.photo" class="avatar margin-right-xs"></image>
+								{{item.username}}
 							</view>
 							<view class="readVol text-pgray text-sm">
-								播放:123
+								播放:{{item.play}}
 							</view>
 						</view>
 					</view>
 				</template>
 				<template v-slot:right="{ rightList }">
-					<view class="demo-warter" v-for="(item, index) in rightList" :key="index">
-						<u-lazy-load threshold="-450" border-radius="10" :image="item.image" :index="index"></u-lazy-load>
-						<view class="demo-title">{{ item.title }}</view>
-						<view class="demo-bottom margin-top-sm flex align-center justify-between">
+					<view class="demo-warter" v-for="(item, index) in rightList" :key="item.guid_id" @click="toDetail(item.id)">
+						<u-lazy-load threshold="-450" border-radius="10" :image="item.nimages" :index="item.guid_id"></u-lazy-load>
+						<view class="demo-title u-p-l-10 u-p-r-10">{{ item.ntitle }}</view>
+						<view class="demo-bottom margin-top-sm flex align-center justify-between u-p-l-10 u-p-r-10">
 							<view class="avatar-container flex align-center text-pgray text-sm">
-								<image :src="item.image" class="avatar margin-right-xs"></image>
-								叽里咕噜
+								<image :src="item.photo" class="avatar margin-right-xs"></image>
+								{{item.username}}
 							</view>
 							<view class="readVol text-pgray text-sm">
-								播放:123
+								播放:{{item.play}}
 							</view>
 						</view>
 					</view>
 				</template>
 			</u-waterfall>
-			<u-loadmore bg-color="rgb(240, 240, 240)" :status="loadStatus" @loadmore="addRandomData"></u-loadmore>
+			<view v-if="showLoadmore">
+				<u-loadmore bg-color="rgb(240, 240, 240)" :status="loadStatus" @loadmore="addRandomData"></u-loadmore>
+			</view>
 		</view>
 		
 		<u-tabbar
@@ -88,98 +89,133 @@ export default {
 			isScroll: false,
 			loadStatus: 'loadmore',
 			flowList: [],
-			list: [
-				{
-					price: 35,
-					title: '北国风光，千里冰封，万里雪飘',
-					shop: '李白杜甫白居易旗舰店',
-					image: 'http://pic.sc.chinaz.com/Files/pic/pic9/202002/zzpic23327_s.jpg'
-				},
-				{
-					price: 75,
-					title: '望长城内外，惟余莽莽',
-					shop: '李白杜甫白居易旗舰店',
-					image: 'http://pic.sc.chinaz.com/Files/pic/pic9/202002/zzpic23325_s.jpg'
-				},
-				{
-					price: 385,
-					title: '大河上下，顿失滔滔',
-					shop: '李白杜甫白居易旗舰店',
-					image: 'http://pic2.sc.chinaz.com/Files/pic/pic9/202002/hpic2119_s.jpg'
-				},
-				{
-					price: 784,
-					title: '欲与天公试比高',
-					shop: '李白杜甫白居易旗舰店',
-					image: 'http://pic2.sc.chinaz.com/Files/pic/pic9/202002/zzpic23369_s.jpg'
-				},
-				{
-					price: 7891,
-					title: '须晴日，看红装素裹，分外妖娆',
-					shop: '李白杜甫白居易旗舰店',
-					image: 'http://pic2.sc.chinaz.com/Files/pic/pic9/202002/hpic2130_s.jpg'
-				},
-				{
-					price: 2341,
-					shop: '李白杜甫白居易旗舰店',
-					title: '江山如此多娇，引无数英雄竞折腰',
-					image: 'http://pic1.sc.chinaz.com/Files/pic/pic9/202002/zzpic23346_s.jpg'
-				},
-				{
-					price: 661,
-					shop: '李白杜甫白居易旗舰店',
-					title: '惜秦皇汉武，略输文采',
-					image: 'http://pic1.sc.chinaz.com/Files/pic/pic9/202002/zzpic23344_s.jpg'
-				},
-				{
-					price: 1654,
-					title: '唐宗宋祖，稍逊风骚',
-					shop: '李白杜甫白居易旗舰店',
-					image: 'http://pic1.sc.chinaz.com/Files/pic/pic9/202002/zzpic23343_s.jpg'
-				},
-				{
-					price: 1678,
-					title: '一代天骄，成吉思汗',
-					shop: '李白杜甫白居易旗舰店',
-					image: 'http://pic1.sc.chinaz.com/Files/pic/pic9/202002/zzpic23343_s.jpg'
-				},
-				{
-					price: 924,
-					title: '只识弯弓射大雕',
-					shop: '李白杜甫白居易旗舰店',
-					image: 'http://pic1.sc.chinaz.com/Files/pic/pic9/202002/zzpic23343_s.jpg'
-				},
-				{
-					price: 8243,
-					title: '俱往矣，数风流人物，还看今朝',
-					shop: '李白杜甫白居易旗舰店',
-					image: 'http://pic1.sc.chinaz.com/Files/pic/pic9/202002/zzpic23343_s.jpg'
-				}
-			],
 			current: 0,
-			
+			page: 1,
+			totalPage: 0,
+			showLoadmore: false,
+			// longitude: '',
+			// latitude: '',
 		}
 	},
 	onLoad() {
 		that = this
-		this.addRandomData();
+		// this.addRandomData();
+		let data = {
+			type: that.current,
+			page: 1,
+		}
+		that.getList(data);
+	},
+	onReachBottom() {
+		that.loadStatus = 'loading';
+		if (that.totalPage >= that.page) {
+			let data = {
+				type: that.current,
+				page: that.page,
+			}
+			if(that.current == 2){
+				data.longitude = that.longitude,
+				data.latitude = that.latitude
+			} else if(that.current == 3){
+				data.user_id = that.userInfo.user_id
+			}
+			console.log(data)
+			that.getList(data)
+			return
+		}
+		that.loadStatus = 'nomore'
+		// 模拟数据加载
+		// setTimeout(() => {
+		// 	that.addRandomData();
+		// 	that.loadStatus = 'loadmore';
+		// }, 1000);
 	},
 	methods: {
-		addRandomData() {
-			for (let i = 0; i < 10; i++) {
-				let index = this.$u.random(0, this.list.length - 1);
+		getList(data){
+			that.$u.post('/api/video/list',data).then(res => {
+				console.log('getList',res);
+				that.totalPage = res.last_page;
+				if (data.page == 1) {
+					that.flowList = []
+				}
+				that.addRandomData(res.data)
+				if(res.last_page == 1){
+					that.showLoadmore = false
+				} else {
+					that.showLoadmore = true
+				}
+				console.log('showLoadmore:',that.showLoadmore)
+				// that.cmsList = that.cmsList.concat(art)
+				// uni.stopPullDownRefresh();
+				that.page++;
+				// that.showLoadmore == true
+				if(res.data.length == 0){
+					that.loadStatus = 'nomore';
+					return
+				}
+				that.loadStatus = 'loadmore';
+			}).catch(err => {
+				console.log('getList-catch', err);
+			});
+			// this.$u.api.getInfo({id: 3}).then(res => {
+			// 	console.log(res);
+			// })
+		},
+		addRandomData(list) {
+			let flowList = []
+			for (let i = 0; i < list.length; i++) {
+				let index = that.$u.random(0, list.length - 1);
 				// console.log(index);
 				// 先转成字符串再转成对象，避免数组对象引用导致数据混乱
-				let item = JSON.parse(JSON.stringify(this.list[index]));
+				let item = JSON.parse(JSON.stringify(list[index]));
 				// console.log(item);
-				item.id = this.$u.guid();
+				item.guid_id = that.$u.guid();
 				// console.log(item);
-				this.flowList.push(item);
+				flowList.push(item);
 			}
+			that.flowList = flowList
+			console.log(flowList)
+		},
+		toDetail(id){
+			console.log(id);
+			// that.$u.route('/pages/videoDetail/videoDetail');
+			that.$u.route({
+				url: '/pages/videoDetail/videoDetail',
+				params: {
+					id: id
+				}
+			})
+			
 		},
 		tabChange(e){
 			console.log(e);
+			if(that.current == e){
+				return
+			}
+			let data = {
+				type: e,
+				page: 1,
+			}
+			if(e == 2){
+				if(!that.longitude || !that.latitude){
+					that.getLocations()
+					return
+				}
+				data.longitude = that.longitude,
+				data.latitude = that.latitude
+			} else if(e == 3){
+				data.user_id = that.userInfo.user_id
+			}
 			this.current = e;
+			console.log(data)
+			that.getList(data)
+			// let data = {
+			// 	type: e,
+			// 	page: 1,
+			// 	user_id: that.userInfo.user_id,
+			// 	longitude: that.longitude,
+			// 	latitude: that.latitude
+			// }
 		},
 		tabBarChange(e){
 			console.log(e);
@@ -195,11 +231,20 @@ export default {
 				// });
 			}
 		},
-		toRoute(e){
-			console.log(e);
-			uni.switchTab({
-				url: '../mine/mine'
-			})
+		getLocations(){
+			console.log('getLocations');
+			uni.getLocation({
+			    success: function (res) {
+					console.log(res);
+					that.$u.vuex('longitude', res.longitude)
+					that.$u.vuex('latitude', res.latitude)
+					// that.longitude = res.longitude
+					// that.latitude = res.latitude
+			    },
+				fail(err){
+					console.log(err);
+				}
+			});
 		},
 	}
 }
@@ -213,6 +258,7 @@ page{
 	padding: 0 30rpx;
 	display: flex;
 	align-items: center;
+	justify-content: center;
 	flex: 1;
 	.logo {
 		height: 50rpx;
@@ -227,9 +273,9 @@ page{
 	&::after{
 		content: '';
 		position: absolute;
-		right: 1rpx;
+		right: 0;
 		top: 25rpx;
-		width: 1rpx;
+		width: 2rpx;
 		height: 30rpx;
 		background-color: #909399;
 	}

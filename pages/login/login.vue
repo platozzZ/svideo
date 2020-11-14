@@ -4,7 +4,7 @@
 		<view class="container flex flex-direction">
 			<view class="header flex align-center justify-center">
 				<view class="avatar flex align-center flex-direction">
-					<u-avatar src="../../../static/image/loginlogo.png" size="176"></u-avatar>
+					<u-avatar src="./../../static/image/loginlogo.png" size="176"></u-avatar>
 				</view>
 			</view>
 			<view class="form" v-show="toogleLogin">
@@ -19,7 +19,7 @@
 					</u-form-item>
 					<view class="flex align-center u-tips-color text-sm u-m-t-20" v-if="!showVeriFication">
 						<u-icon name="checkmark-circle" size="26" color="#18b566" class="u-m-r-5"></u-icon>
-						短信验证码已发送至手机<text class="u-type-warning">14526372837</text>，请查收
+						短信验证码已发送至手机<text class="u-type-warning">{{model.phone}}</text>，请查收
 					</view>
 				</u-form>
 				<u-verification-code seconds="60" @end="end" @start="start" ref="uCode" @change="codeChange"></u-verification-code>
@@ -47,11 +47,11 @@
 				</view>
 				<view class="other flex align-center justify-center u-m-t-20">
 					<view class="other-item" >
-						<u-icon name="weixin-circle-fill" label="微信" label-pos="bottom" size="70" color="#18b566" label-color="#909399" label-size="24"></u-icon>
+						<u-icon name="weixin-circle-fill" label="微信" label-pos="bottom" size="90" color="#18b566" label-color="#909399" label-size="28"></u-icon>
 						<!-- <button type="" open-type="getPhoneNumber"></button> -->
 						<view class="getPhoneNumber">
 							
-							<u-button :custom-style="customStyle" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">雪月夜</u-button>
+							<u-button :custom-style="customStyle" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber"></u-button>
 						</view>
 					</view>
 				</view>
@@ -189,15 +189,6 @@ export default {
 		loginPwd(data){
 			that.$u.post('/api/user/login', data).then(res => {
 				console.log('loginPwd',res);
-				// id: 29
-				// user_id: 160
-				// username: "山地"
-				// phone: "13552601209"
-				// status: 1
-				// photo: "http://home-api.fblife.comimages/groups/202008/m9hgnEBGHu40397.png"
-				// user_type: 2
-				// distributor_id: 6
-				// token: "ca74449f1001cc461a6b0150ec32fcaf13552601209"
 				that.$u.vuex('token', res.token)
 				that.$u.vuex('userInfo', res)
 				that.showToast()
@@ -230,32 +221,49 @@ export default {
 		},
 		end() {
 			that.showVeriFication = true
-			this.$u.toast('倒计时结束');
+			that.$u.toast('倒计时结束');
 		},
 		start() {
 			that.showVeriFication = false
-			this.$u.toast('倒计时开始');
+			that.$u.toast('倒计时开始');
 		},
 		
 		codeChange(text) {
-			this.codeTips = text;
+			that.codeTips = text;
 		},// 获取验证码
-		getCode() {
-			if(this.$refs.uCode.canGetCode) {
-				// 模拟向后端请求验证码
-				uni.showLoading({
-					title: '正在获取验证码',
-					mask: true
-				})
-				setTimeout(() => {
-					uni.hideLoading();
+		getCode() { // /api/user/captcha
+			console.log(that.model.phone.length);
+			if(!that.$u.test.mobile(that.model.phone)){
+				that.$u.toast('请输入正确手机号');
+				return
+			}
+			that.$refs.uCode.start();
+			if(that.$refs.uCode.canGetCode) {
+				let data = {
+					phone: that.model.phone
+				}
+				console.log(data);
+				that.$u.post('/api/user/captcha', data).then(res => {
+					console.log('getCode',res);
+					// that.$u.vuex('token', res.token)
+					// that.$u.vuex('userInfo', res)
+					// that.showToast()
 					// 这里此提示会被this.start()方法中的提示覆盖
-					this.$u.toast('验证码已发送');
+					that.$u.toast('验证码已发送');
 					// 通知验证码组件内部开始倒计时
-					this.$refs.uCode.start();
-				}, 2000);
+					that.$refs.uCode.start();
+				}).catch(err => {
+					console.log('catch', err);
+				});
+				// setTimeout(() => {
+				// 	uni.hideLoading();
+				// 	// 这里此提示会被this.start()方法中的提示覆盖
+				// 	this.$u.toast('验证码已发送');
+				// 	// 通知验证码组件内部开始倒计时
+				// 	this.$refs.uCode.start();
+				// }, 2000);
 			} else {
-				this.$u.toast('倒计时结束后再发送');
+				that.$u.toast('倒计时结束后再发送');
 			}
 		},
 	}

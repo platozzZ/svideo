@@ -12,7 +12,7 @@ try{
 }
 
 // 需要永久存储，且下次APP启动需要取出的，在state中的变量名
-let saveStateKeys = ['openid', 'token', 'isSwitch', 'userInfo'];
+let saveStateKeys = ['openid', 'token', 'isSwitch', 'userInfo', 'latitude', 'longitude', 'isFirstSaveImage'];
 
 // 保存变量到本地存储中
 const saveLifeData = function(key, value){
@@ -40,6 +40,9 @@ const store = new Vuex.Store({
 		token: lifeData.token ? lifeData.token : '',
 		openid: lifeData.openid ? lifeData.openid : '',
 		isSwitch: lifeData.isSwitch ? lifeData.isSwitch : '',
+		longitude: lifeData.longitude ? lifeData.longitude : '',
+		latitude: lifeData.latitude ? lifeData.latitude : '',
+		isFirstSaveImage: lifeData.isFirstSaveImage ? lifeData.isFirstSaveImage : 0,
 		// 自定义tabbar数据
 		vuex_midButton: true,
 		vuex_midButton_size: '100',

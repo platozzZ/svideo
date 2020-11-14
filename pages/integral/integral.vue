@@ -8,7 +8,7 @@
 					285
 					<text class="u-abso">积分</text>
 				</view>
-				<view class="btn">
+				<view class="btn" :style="{margin:(isIphoneX?'20rpx 0 30rpx':'50rpx 0')}">
 					去商城兑换
 				</view>
 			</view>
@@ -57,10 +57,22 @@ export default {
 			current: 0,
 			label: '2020-01-23',
 			title: '当月交易奖励积分',
+			isIphoneX: false
 		}
 	},
 	onLoad() {
 		that = this
+		console.log(this.$u.sys())
+		console.log(this.$u.sys().model)
+		let sysModel = that.$u.sys().model
+		
+		let reg = RegExp(/iPhone X/);
+		that.isIphoneX = reg.test(sysModel)
+		// if(reg.test(sysModel)){
+		// 	that.isIphoneX = true
+		// }
+		console.log(reg.test(sysModel)); // true
+		console.log(that.isIphoneX);
 	},
 	methods: {
 		toRoute(e){
@@ -107,7 +119,7 @@ page{
 			color: #FFD524;
 			border: 1rpx solid #FFD524;
 			border-radius: 4rpx;
-			margin: 50rpx 0;
+			margin: 20rpx 0;
 		}
 	}
 }

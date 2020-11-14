@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "意见反馈",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "u-navbar": "/uview-ui/components/u-navbar/u-navbar",
+    "u-loadmore": "/uview-ui/components/u-loadmore/u-loadmore",
+    "u-input": "/uview-ui/components/u-input/u-input",
+    "u-button": "/uview-ui/components/u-button/u-button"
+  }
+}

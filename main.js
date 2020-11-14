@@ -6,6 +6,9 @@ Vue.config.productionTip = false
 import uView from "uview-ui";
 Vue.use(uView);
 
+import getSetting from './common/locations.js'
+Vue.prototype.$getSetting = getSetting
+
 import store from '@/store'
 
 let vuexStore = require('@/store/$u.mixin.js')
