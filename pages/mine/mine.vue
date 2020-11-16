@@ -40,6 +40,9 @@
 				</u-grid>
 			</view>
 		</view>
+		<view class="padding">
+			<u-button @click="clearStorage" size="mini" shape="circle" type="warning">退出登录</u-button>
+		</view>
 		<u-tabbar
 			:list="vuex_tabbar"
 			:mid-button="vuex_midButton"
@@ -85,6 +88,11 @@ export default {
 				// 	}
 				// });
 			}
+		},
+		clearStorage(){
+			uni.clearStorage()
+			
+			that.$u.vuex('userInfo', '')
 		},
 		toIntegral(){
 			that.$u.route('/pages/integral/integral');
