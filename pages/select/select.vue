@@ -49,17 +49,17 @@
 				</template>
 			</u-waterfall>
 			<view v-if="showLoadmore">
-				<u-loadmore bg-color="rgb(240, 240, 240)" :status="loadStatus" @loadmore="addRandomData"></u-loadmore>
+				<u-loadmore bg-color="rgb(240, 240, 240)" :status="loadStatus"></u-loadmore>
 			</view>
 		</view>
 		
-		<u-tabbar
+		<!-- <u-tabbar
 		    :list="vuex_tabbar"
 			:mid-button="vuex_midButton"
 			:mid-button-size="vuex_midButton_size"
 			:icon-size="vuex_iconsize"
 			@change="tabBarChange"
-		></u-tabbar>
+		></u-tabbar> -->
 	</view>
 </template>
 

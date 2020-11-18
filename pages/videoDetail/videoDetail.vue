@@ -47,10 +47,11 @@
 		<view class="footer">
 			<view class="footer-seat"></view>
 			<view class="footer-content">
-				<view class="handle flex align-center justify-around padding-lr padding-top-xs solid-top">
+				<view class="handle flex align-center justify-around padding-lr-sm padding-top-xs solid-top u-rela">
+					<view class="handle-mask u-abso" v-if="!userInfo.username" @click="toLogin"></view>
 					<view class="handle-item" @click="tpaCollect">
-						<u-icon name="star" size="50" color="#909399" v-if="art.is_collect == 0"></u-icon>
-						<u-icon name="star-fill" size="50" color="#F5CB2B" v-else></u-icon>
+						<image src="../../static/image/videodetail/collect.png" mode="widthFix" v-if="art.is_collect == 0"></image>
+						<image src="../../static/image/videodetail/collect_select.png" mode="widthFix" v-else></image>
 					</view>
 					<view class="handle-item">
 						<view class="share-btn u-abso">
@@ -170,7 +171,6 @@ export default {
 			activeStyle: {
 				color: ''
 			},
-			show: false,
 			customStyle: {
 				width: '100%',
 				height: '100%',
@@ -293,6 +293,10 @@ export default {
 		},
 		// https://qn.kemean.cn/upload/202006/05/15913462289486a12js7d.png
 		makePhoneCall(e){
+			if(!that.userInfo.phone){
+				that.$u.route('/pages/login/login')
+				return
+			}
 			uni.makePhoneCall({
 			    phoneNumber: that.art.phone
 			});
@@ -402,6 +406,9 @@ export default {
 			})
 			
 		},
+		toLogin(){
+			that.$u.route('/pages/login/login');
+		},
 		change(index) {
 			this.current = index;
 		}
@@ -468,6 +475,13 @@ page{
 .handle{
 	width: 100%;
 	height: 100%;
+	.handle-mask{
+		width: 100%;
+		height: 100%;
+		left: 0;
+		top: 0;
+		z-index: 99;
+	}
 	.handle-item{
 		position: relative;
 		width: 50rpx;

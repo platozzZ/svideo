@@ -8,7 +8,6 @@
     "u-tabs": "/uview-ui/components/u-tabs/u-tabs",
     "u-waterfall": "/uview-ui/components/u-waterfall/u-waterfall",
     "u-lazy-load": "/uview-ui/components/u-lazy-load/u-lazy-load",
-    "u-loadmore": "/uview-ui/components/u-loadmore/u-loadmore",
-    "u-tabbar": "/uview-ui/components/u-tabbar/u-tabbar"
+    "u-loadmore": "/uview-ui/components/u-loadmore/u-loadmore"
   }
 }

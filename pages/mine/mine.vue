@@ -7,9 +7,12 @@
 					<image :src="userInfo.photo" class="avatar"></image>
 					{{userInfo.username}}
 				</view>
-				<view class=" flex flex-direction align-center" @click="toLogin" v-else>
+				<view class=" flex flex-direction align-center u-rela" @click="toLogin" v-else>
 					<image src="../../static/image/mine-avatar.png" class="avatar"></image>
-					请登录
+					获取微信头像
+					<view class="getUserInfo">
+						<u-button :custom-style="customStyle" open-type="getUserInfo" @getuserinfo="getUserInfo"></u-button>
+					</view>
 				</view>
 			</view>
 			<view class="info flex align-center justify-between">
@@ -41,15 +44,24 @@
 			</view>
 		</view>
 		<view class="padding">
+			<!-- <open-data type="userNickName"></open-data>
+			<open-data type="userAvatarUrl"></open-data> -->
 			<u-button @click="clearStorage" size="mini" shape="circle" type="warning">退出登录</u-button>
 		</view>
-		<u-tabbar
+		
+		<u-modal v-model="modalShow" ref="uModal" :show-cancel-button="true" :show-title="false" content="部分功能需要获取您的手机号,请确认">
+			<view class="confirm-button u-rela flex align-center justify-center" slot="confirm-button">
+				确认
+				<u-button :custom-style="modalCustomStyle" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber"></u-button>
+			</view>
+		</u-modal>
+		<!-- <u-tabbar
 			:list="vuex_tabbar"
 			:mid-button="vuex_midButton"
 			:mid-button-size="vuex_midButton_size"
 			:icon-size="vuex_iconsize"
 			@change="tabBarChange"
-		></u-tabbar>
+		></u-tabbar> -->
 		
 	</view>
 </template>
@@ -68,26 +80,62 @@ export default {
 				// justifyContent: 'space-between',
 				minHeight: '130rpx'
 			},
-			
+			customStyle: {
+				width: '100%',
+				height: '100%',
+				position: 'absolute',
+				top: '0',
+				left: '0',
+				opacity: 0
+			},
+			modalShow: false,
+			modalCustomStyle: {
+				width: '100%',
+				height: '100%',
+				position: 'absolute',
+				top: '0',
+				left: '0',
+				opacity: 0
+			},
 		}
 	},
 	onLoad() {
 		that = this
 	},
 	methods: {
-		tabBarChange(e){
+		getUserInfo(e){
 			console.log(e);
-			if(e == 2){
-				that.$u.route('/pages/add/add');
-				// uni.chooseVideo({
-				// 	count: 1,
-				// 	sourceType: ['camera'],
-				// 	success: function (res) {
-				// 		console.log(res);
-				// 		// self.src = res.tempFilePath;
-				// 	}
-				// });
+			that.modalShow = true
+			if(!e.detail.userInfo){
+				return
 			}
+			
+			that.$u.vuex('userInfo', e.detail.userInfo)
+		},
+		getPhoneNumber(e){
+			console.log('getPhoneNumber',e);
+			that.modalShow = false
+			let data = {
+				type: 3,
+				wx_openid: that.openid,
+				encryptedData:e.detail.encryptedData,
+				iv: e.detail.iv
+			}
+			that.getphone(data)
+		},
+		getphone(data){
+			that.$u.post('/api/user/getphone', data).then(res => {
+				console.log('login',res);
+				// that.$u.vuex('token', res.token)
+				// that.$u.vuex('userInfo', res)
+				// that.showToast()
+				// that.$u.route({
+				// 	type: 'back'
+				// })
+				// resolve(res)
+			}).catch(err => {
+				console.log('catch', err);
+			});
 		},
 		clearStorage(){
 			uni.clearStorage()
@@ -102,6 +150,11 @@ export default {
 		},
 		toRoute(e){
 			console.log(e);
+			if(!that.userInfo){
+				that.toLogin()
+				return
+				// that.showToast('')
+			}
 			switch(e){
 				case 'order':
 					that.$u.route('/pages/order/order');
@@ -128,16 +181,8 @@ export default {
 					that.$u.route('/pages/mineList/review');
 					break;
 			}
-			// if(e == 'order'){
-			// 	that.$u.route('/pages/order/order');
-			// } else if(e == 'business'){
-			// 	that.$u.route('/pages/business/business');
-				
-			// } else if(e == 'collect'){
-			// 	that.$u.route('/pages/mineList/collect');
-				
-			// }
 		},
+		
 	}
 }
 </script>
@@ -176,6 +221,18 @@ page{
 			display: block;
 			border: 6rpx solid #fff;
 			margin-bottom: 20rpx;
+		}
+		.getUserInfo{
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			/deep/ .u-btn{
+				width: 100%;
+				height: 100%;
+				opacity: 0;
+			}
 		}
 	}
 	.info{

@@ -28,7 +28,7 @@
 				</view>
 				<u-upload ref="uUpload" name="license" max-count="1" :show-upload-list="showUploadList" :custom-btn="true" :auto-upload="false" :show-progress="false"
 					@on-list-change="onListChange" :form-data="model"
-					action="https://jjsp.fblife.com/api/distributor/add"
+					action="https://jjsp.autovlog.com.cn/api/distributor/add"
 				>
 					<view slot="addBtn" class="slot-btn" hover-class="slot-btn__hover" hover-stay-time="150">
 						<u-icon name="plus" size="120" color="#c0c4cc"></u-icon>
@@ -274,7 +274,7 @@ export default {
 			  // that.$refs.uUpload.upload();
 			  // return
 			let uploadTask = uni.uploadFile({
-				url: "https://jjsp.fblife.com/api/distributor/add",
+				url: "https://jjsp.autovlog.com.cn/api/distributor/add",
 				formData: data,
 				filePath: data.license,
 				name: "license",

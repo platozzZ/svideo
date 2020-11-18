@@ -11,17 +11,17 @@
 			</view>
 		</u-navbar>
 		<view class="container">
-			<view class="padding-tb-sm padding-lr">
+			<view class="padding-tb-sm padding-lr p-swiper">
 				<u-swiper :height="320" :list="swiperList" :title="title"
 				 :title-style="swiperStyle" name="cf_image" :interval="30000" @click="tapBanner"></u-swiper>
 			</view>
-			<view class="">
-				<u-grid :col="'4'" :border="false">
+			<view class="padding-lr-sm">
+				<u-grid col="5" :border="false">
 					<u-grid-item v-for="(item,index) in gridList" :key="item.id" :custom-style="gridItemStyle" @click="toRoute">
 						<view class="grid-image-container">
-							<image :src="'../../static/image/nav/p-' + item.id + '.png'" class="grid-image" mode="widthFix"></image>
+							<image :src="'../../static/image/nav/' + item.id + '.png'" class="grid-image"></image>
 						</view>
-						<view class="grid-text text-xs u-m-t-20 u-tips-color">{{item.name}}</view>
+						<view class="grid-text text-xs u-m-t-10 u-tips-color">{{item.name}}</view>
 					</u-grid-item>
 				</u-grid>
 			</view>
@@ -59,16 +59,19 @@
 						</view>
 					</template>
 				</u-waterfall>
-				<u-loadmore bg-color="rgb(240, 240, 240)" :status="loadStatus" @loadmore="addRandomData"></u-loadmore>
+				<u-loadmore bg-color="rgb(240, 240, 240)" :status="loadStatus" margin-top="20" margin-bottom="20"></u-loadmore>
 			</view>
 		</view>
-		<u-tabbar
+		<view class="p-add" @click="toAdd">
+			<u-image src="../../static/image/tabbar/add.png" width="100%" shape="circle" mode="widthFix"></u-image>
+		</view>
+		<!-- <u-tabbar
 		    :list="vuex_tabbar"
 			:mid-button="vuex_midButton"
 			:mid-button-size="vuex_midButton_size"
 			:icon-size="vuex_iconsize"
 			@change="tabBarChange"
-		></u-tabbar>
+		></u-tabbar> -->
 	</view>
 </template>
 
@@ -96,9 +99,7 @@ export default {
 			},
 			title: true,
 			gridList: [
-				{name:'优惠活动',id: 'discount'},{name:'直播广场',id: 'video'},{name:'积分商城',id: 'mall'},{name:'直播申请',id: 'live'},
-				// {name:'优惠',id: 'discount'},{name:'视频',id: 'video'},{name:'积分',id: 'integral'},{name:'直播',id: 'live'},
-				// {name:'活动',id: 'activity'},{name:'广场',id: 'square'},{name:'商城',id: 'mall'},{name:'申请',id: 'apply'},
+				{name:'推荐',id: 'recommend'},{name:'最新',id: 'new'},{name:'最热',id: 'hot'},{name:'附近',id: 'nearby'},{name:'关注',id: 'follow'}
 			],
 			gridItemStyle: {
 				padding: '15rpx 0',
@@ -121,8 +122,10 @@ export default {
 				console.log('newPromise:',res);
 				that.$u.vuex('openid', res.openid)
 				that.$u.vuex('isSwitch', res.switch)
-				
+				that.getUserInfo(res.openid)
 			});
+		} else {
+			that.getUserInfo(that.openid)
 		}
 		// #endif
 		let data = {
@@ -201,19 +204,23 @@ export default {
 			that.flowList = flowList
 			console.log(flowList)
 		},
-		tabBarChange(e){
-			console.log(e);
-			if(e == 2){
-				that.$u.route('/pages/add/add');
-				// uni.chooseVideo({
-				// 	count: 1,
-				// 	sourceType: ['camera'],
-				// 	success: function (res) {
-				// 		console.log(res);
-				// 		// self.src = res.tempFilePath;
-				// 	}
-				// });
+		getUserInfo(e){
+			let data = {
+				wx_openid:e
 			}
+			that.$u.post('/api/user/getUserInfo',data).then(res => {
+				console.log('getUserInfo',res);
+				
+			}).catch(err => {
+				console.log('getUserInfo-catch', err);
+			});
+		},
+		toAdd(e){
+			if(!that.userInfo.username || !that.userInfo.phone){
+				that.$u.route('/pages/login/login');
+				return
+			}
+			that.$u.route('/pages/add/add');
 		},
 		tapBanner(index){
 			console.log(index);
@@ -278,7 +285,7 @@ page{
 		margin-left: 30rpx;
 	}
 }
-/deep/ .u-indicator-item-round{
+.p-swiper /deep/ .u-indicator-item-round{
 	width: 9rpx!important;
 	height: 9rpx!important;
 	background-color: #D5D5D5!important;
@@ -289,14 +296,14 @@ page{
 }
 .grid-image-container{
 	// flex: 1;
-	width: 80rpx;
-	height: 50rpx;
+	width: 70rpx;
+	height: 70rpx;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	.grid-image{
-		height: auto;
-		width: 50rpx;
+		height: 100%;
+		width: 100%;
 	}
 }
 .u-waterfall{
@@ -327,5 +334,18 @@ page{
 		}
 	}
 }
-
+.p-add {
+	width: 120rpx;
+	height: 120rpx;
+	position: fixed;
+	bottom: 180rpx;
+	right: 30rpx;
+	z-index: 9;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: rgba(255,255,255,0);
+	color: $u-content-color;
+	
+}
 </style>

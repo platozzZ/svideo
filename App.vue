@@ -88,34 +88,6 @@ export default {
 			});
 		},
 		
-		getInfo(e){
-			// http://home-api.fblife.com/api/v1//user/wxlogin
-			uni.request({
-				url: 'https://home-api.fblife.com/api/v1/user/wxlogin',
-				method: "POST",
-				data: {
-					openid: e
-				},
-				header: {
-					'Content-Type': 'application/x-www-form-urlencoded'
-				},
-				success: (res) => {
-					console.log('getInfo',res);
-					if(res.data.code == 201){
-						uni.setStorageSync('userInfo',res.data.data)
-						uni.setStorageSync('token', res.data.data.token);
-						uni.setStorageSync('phone', res.data.data.phone);
-						that.globalData.userInfo = res.data.data
-						that.globalData.token = res.data.data.token
-						that.globalData.phone = res.data.data.phone
-						
-					} else {
-						// that.loginOpenid()
-					}
-					// this.text = 'request success';
-				}
-			});
-		},
 	}
 };
 </script>

@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "活动",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "u-navbar": "/uview-ui/components/u-navbar/u-navbar",
+    "u-swiper": "/uview-ui/components/u-swiper/u-swiper",
+    "u-image": "/uview-ui/components/u-image/u-image"
+  }
+}

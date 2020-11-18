@@ -21,7 +21,7 @@
 						@on-list-change="onListChange" -->
 						<u-upload name="cover_image" width="160" height="160" max-count="1" :custom-btn="true" upload-text=" " :show-progress="false"
 						
-							action="https://jjsp.fblife.com/api/videofill/upload_img"
+							action="https://jjsp.autovlog.com.cn/api/videofill/upload_img"
 							@on-remove="onRemove" 
 							@on-change="onChange" 
 						>
@@ -218,7 +218,7 @@ export default {
 			console.log(data)
 			  // that.$refs.uUpload.upload();
 			let uploadTask = uni.uploadFile({
-				url: "https://jjsp.fblife.com/api/videofill/store",
+				url: "https://jjsp.autovlog.com.cn/api/videofill/store",
 				formData: data,
 				filePath: data.video,
 				name: "video",

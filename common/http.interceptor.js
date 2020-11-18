@@ -2,7 +2,7 @@
 // 同时，我们也可以在此使用getApp().globalData，如果你把token放在getApp().globalData的话，也是可以使用的
 const install = (Vue, vm) => {
 	Vue.prototype.$u.http.setConfig({
-		baseUrl: 'https://jjsp.fblife.com',
+		baseUrl: 'https://jjsp.autovlog.com.cn',
 		showLoading: true, // 是否显示请求中的loading
 		loadingMask: true, // 展示loading的时候，是否给一个透明的蒙层，防止触摸穿透
 

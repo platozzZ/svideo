@@ -2,10 +2,10 @@
   "navigationBarTitleText": "我的",
   "navigationStyle": "custom",
   "usingComponents": {
+    "u-button": "/uview-ui/components/u-button/u-button",
     "u-line": "/uview-ui/components/u-line/u-line",
     "u-grid": "/uview-ui/components/u-grid/u-grid",
     "u-grid-item": "/uview-ui/components/u-grid-item/u-grid-item",
-    "u-button": "/uview-ui/components/u-button/u-button",
-    "u-tabbar": "/uview-ui/components/u-tabbar/u-tabbar"
+    "u-modal": "/uview-ui/components/u-modal/u-modal"
   }
 }
