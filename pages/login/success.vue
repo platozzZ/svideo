@@ -1,8 +1,8 @@
 <template>
 	<view class="">
-		<u-navbar title="登录成功"></u-navbar>
+		<!-- <u-navbar title="登录成功"></u-navbar> -->
 		<view class="container flex flex-direction align-center u-p-t-80">
-			<image src="../../static/image/loginSuccess.png" class="head"></image>
+			<image src="https://jjsp.activitysign.com/image/loginSuccess.png" class="head"></image>
 			<view class="u-main-color u-font-32 u-m-t-40 u-m-b-20">
 				登录成功
 			</view>

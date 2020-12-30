@@ -1,15 +1,10 @@
 <template>
 	<view class="">
-		<u-navbar :is-back="false">
+		<!-- <u-navbar :is-back="false">
 			<view class="slot-wrap">
-				<!-- <view class=""> -->
-					<image src="../../static/image/logo.png" class="logo"></image>
-				<!-- </view> -->
-				<!-- <view class="search-wrap">
-					<u-search v-model="keyword" :show-action="showAction" height="56" :action-style="{color: '#fff'}"></u-search>
-				</view> -->
+					<image src="https://jjsp.activitysign.com/image/logo.png" class="logo"></image>
 			</view>
-		</u-navbar>
+		</u-navbar> -->
 		<u-sticky  offset-top="0">
 			<u-tabs bg-color="#fff" inactive-color="#909399" active-color="#303030" :active-item-style="activeStyle" :show-bar="false" font-size="28" :list="tabList"
 			@change="tabChange" :current="current" :is-scroll="isScroll"></u-tabs>

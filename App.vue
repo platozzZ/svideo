@@ -9,9 +9,12 @@ export default {
 	onLaunch: function() {
 		that = this
 		console.log('App Launch');
-		console.log(this);
-		console.log(that);
-		// that.newPromise()
+		// if(!that.openid){
+		// 	that.getOpenid()
+		// } else {
+		// 	that.getUserInfo(that.openid)
+		// }
+		
 		// #ifdef MP-WEIXIN
 		// 获取小程序更新机制兼容
 		if (wx.canIUse('getUpdateManager')) {
@@ -58,36 +61,74 @@ export default {
 	},
 	methods:{
 		newPromise(){
-			return new Promise(function (resolve, reject) {
+			// return new Promise(function (resolve, reject) {
 				// 调用登录接口
 				wx.login({
-				  success: function (e) {
-					  console.log(e);
+					success: function (e) {
+						console.log(e);
+						if (e.code) {
+						  //调用登录接口
+							that.$u.post('/api/user/getopenid', {
+								code: e.code
+							}).then(res => {
+								console.log('app-newPromise',res);
+								// resolve(res)
+								// that.$isResolve()
+								that.$u.vuex('openid', res.openid)
+								that.getUserInfo(res.openid)
+							});
+						  
+						} else {
+							console.log('获取用户登录态失败！' + res.errMsg);
+							var res = {
+								status: 300,
+								data: '错误'
+							}
+						  // reject('error');
+						}  
+					}
+				})
+			// });
+		},
+		getOpenid(){
+			wx.login({
+				success: function (e) {
+					console.log(e);
 					if (e.code) {
 					  //调用登录接口
-					  // /api/user/getopenid
 						that.$u.post('/api/user/getopenid', {
 							code: e.code
-						},{
-							'Content-Type': 'application/x-www-form-urlencoded'
 						}).then(res => {
 							console.log('app-newPromise',res);
-							resolve(res)
+							that.$u.vuex('openid', res.openid)
+							that.getUserInfo(res.openid)
 						});
 					  
 					} else {
-					  console.log('获取用户登录态失败！' + res.errMsg);
-					  var res = {
-						status: 300,
-						data: '错误'
-					  }
-					  reject('error');
+						console.log('获取用户登录态失败！' + res.errMsg);
+						var res = {
+							status: 300,
+							data: '错误'
+						}
 					}  
-				  }
-				})
+				}
+			})
+		},
+		// /api/user/getUserInfo
+		getUserInfo(id){
+			that.$u.post('/api/user/getUserInfo', {
+				wx_openid: id
+			}).then(res => {
+				if(!res){
+					return
+				}
+				console.log('app-getUserInfo',res);
+				that.$u.vuex('isSwitch', res.switch)
+				that.$u.vuex('userInfo', res)
+				// that.$u.vuex('userInfo.phone',"18911262211")
+				// resolve(res)
 			});
 		},
-		
 	}
 };
 </script>

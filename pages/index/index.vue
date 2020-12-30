@@ -2,12 +2,15 @@
 	<view class="">
 		<u-navbar :is-back="false">
 			<view class="slot-wrap">
-				<!-- <view class=""> -->
-					<image src="../../static/image/logo.png" class="logo"></image>
-				<!-- </view> -->
-				<!-- <view class="search-wrap">
-					<u-search v-model="keyword" :show-action="showAction" height="56" :action-style="{color: '#fff'}"></u-search>
-				</view> -->
+				<view class="">
+					<image src="https://jjsp.activitysign.com/image/logo.png" class="logo"></image>
+				</view>
+				<view class="search-wrap">
+					<view class="searchContainer" @click="toSearch">
+						<u-icon name="search" color="#BDBDBD" size="24" label="搜索需要的内容" label-size="24" label-color="#BDBDBD"></u-icon>
+					</view>
+					<!-- <u-search v-model="keyword" :show-action="showAction" height="56" :action-style="{color: '#fff'}"></u-search> -->
+				</view>
 			</view>
 		</u-navbar>
 		<view class="container">
@@ -16,22 +19,24 @@
 				 :title-style="swiperStyle" name="cf_image" :interval="30000" @click="tapBanner"></u-swiper>
 			</view>
 			<view class="padding-lr-sm">
-				<u-grid col="5" :border="false">
-					<u-grid-item v-for="(item,index) in gridList" :key="item.id" :custom-style="gridItemStyle" @click="toRoute">
-						<view class="grid-image-container">
-							<image :src="'../../static/image/nav/' + item.id + '.png'" class="grid-image"></image>
-						</view>
-						<view class="grid-text text-xs u-m-t-10 u-tips-color">{{item.name}}</view>
-					</u-grid-item>
-				</u-grid>
+				<u-tabs :list="gridList" 
+					active-color="#060606" inactive-color="#898989" 
+					:active-item-style="activeItemstyle"
+					:bar-style="barStyle"
+					:is-scroll="false" :current="tabCur" @change="change"
+				></u-tabs>
 			</view>
-			<view class="padding-top-sm">
-				<u-waterfall v-model="flowList" ref="uWaterfall">
+			<view class="padding-top-sm" v-if="flowList.length > 0">
+				<!-- <block v-if="tabCur == index" v-for="(item,index) in gridList" :key="index"> -->
+				<u-waterfall v-model="flowList" ref="uWaterfall" :isPage1="isPage1">
 					<template v-slot:left="{ leftList }">
 						<view class="demo-warter" v-for="(item, index) in leftList" :key="item.guid_id" @click="toDetail(item.id)">
-							<!-- 微信小程序需要hx2.8.11版本才支持在template中引入其他组件，比如下方的u-lazy-load组件 -->
 							<u-lazy-load threshold="-450" border-radius="10" :image="item.nimages" :index="item.guid_id"></u-lazy-load>
-							<view class="demo-title u-p-l-10 u-p-r-10">{{ item.ntitle }}</view>
+							<view class="demo-title u-p-l-10 u-p-r-10 u-rela">{{ item.ntitle }}
+								<view class="u-abso demo-near padding-lr-sm">
+									{{item.distance}}
+								</view>
+							</view>
 							<view class="demo-bottom margin-top-sm flex align-center justify-between u-p-l-10 u-p-r-10">
 								<view class="avatar-container flex align-center text-pgray text-sm">
 									<image :src="item.photo" class="avatar margin-right-xs"></image>
@@ -46,7 +51,11 @@
 					<template v-slot:right="{ rightList }">
 						<view class="demo-warter" v-for="(item, index) in rightList" :key="item.guid_id" @click="toDetail(item.id)">
 							<u-lazy-load threshold="-450" border-radius="10" :image="item.nimages" :index="item.guid_id"></u-lazy-load>
-							<view class="demo-title u-p-l-10 u-p-r-10">{{ item.ntitle }}</view>
+							<view class="demo-title u-p-l-10 u-p-r-10 u-rela">{{ item.ntitle }}
+								<view class="u-abso demo-near padding-lr-sm">
+									{{item.distance}}
+								</view>
+							</view>
 							<view class="demo-bottom margin-top-sm flex align-center justify-between u-p-l-10 u-p-r-10">
 								<view class="avatar-container flex align-center text-pgray text-sm">
 									<image :src="item.photo" class="avatar margin-right-xs"></image>
@@ -59,19 +68,14 @@
 						</view>
 					</template>
 				</u-waterfall>
-				<u-loadmore bg-color="rgb(240, 240, 240)" :status="loadStatus" margin-top="20" margin-bottom="20"></u-loadmore>
+				<u-loadmore :is-dot="true" :status="loadStatus" margin-top="20" margin-bottom="20"></u-loadmore>
+				<!-- </block> -->
 			</view>
+			
 		</view>
 		<view class="p-add" @click="toAdd">
-			<u-image src="../../static/image/tabbar/add.png" width="100%" shape="circle" mode="widthFix"></u-image>
+			<u-image src="https://jjsp.activitysign.com/image/tabbar/add.png" width="120rpx" height="120rpx" shape="circle"></u-image>
 		</view>
-		<!-- <u-tabbar
-		    :list="vuex_tabbar"
-			:mid-button="vuex_midButton"
-			:mid-button-size="vuex_midButton_size"
-			:icon-size="vuex_iconsize"
-			@change="tabBarChange"
-		></u-tabbar> -->
 	</view>
 </template>
 
@@ -83,15 +87,20 @@ export default {
 			background: {
 				// backgroundColor: '#001f3f',、
 				// 导航栏背景图
-				background: 'url(../../static/image/logo.png) center no-repeat',
+				background: 'url(https://jjsp.activitysign.com/image/logo.png) center no-repeat',
 				// 还可以设置背景图size属性
 				backgroundSize: '172rpx 50rpx',
 				backgroundColor: '#fff'
 				// 渐变色
 				// backgroundImage: 'linear-gradient(45deg, rgb(28, 187, 180), rgb(141, 198, 63))'
 			},
-			keyword: '',
-			showAction: false,
+			tabCur: 0,
+			activeItemstyle: {
+				fontSize: '32rpx',
+			},
+			barStyle: {
+				backgroundColor: '#FFD524',
+			},
 			swiperList: [],
 			swiperStyle: {
 				textAlign: 'center',
@@ -110,52 +119,72 @@ export default {
 			flowList: [],
 			current: 0,
 			page: 1,
-			totalPage: 0
+			totalPage: 0,
+			isPage1: true
 			
 		}
 	},
-	onLoad() {
-		that = this
-		// #ifdef MP-WEIXIN
-		if(!that.openid){
-			getApp().newPromise().then(function (res) {
-				console.log('newPromise:',res);
-				that.$u.vuex('openid', res.openid)
-				that.$u.vuex('isSwitch', res.switch)
-				that.getUserInfo(res.openid)
-			});
-		} else {
-			that.getUserInfo(that.openid)
+	watch: {
+		openid(nVal, oVal){
+			console.log('nVal', nVal);
+			console.log('oVal', oVal);
+			this.$getUserInfo(this,nVal)
+			
+			
 		}
-		// #endif
+	},
+	onLoad(options) {
+		that = this
+		if(!that.openid){
+			that.$getOpenid(that)
+		}
+		//  else {
+		// 	that.getUserInfo(that.openid)
+		// }
 		let data = {
-			distributor_id: that.userInfo.distributor_id,
-			page: 1
+			type: 0,
+			distributor_id: that.userInfo.distributor_id?that.userInfo.distributor_id:0,
+			page: 1,
+			user_id: that.userInfo.user_id?that.userInfo.user_id:0
 		}
 		that.getList(data);
-		that.getBanner()
+		let bannerData = {
+			type: 0
+		}
+		that.getBanner(bannerData)
 		that.getLocations()
+		console.log(that.userInfo)
+	},
+	
+	onShareAppMessage() {
+		console.log('onShareAppMessage');
+		// that.share()
+		return {
+			title: '每周疯视频',
+			path: '/pages/index/index',
+			success(){
+				console.log('onShareAppMessage-success');
+			}
+		}
 	},
 	onReachBottom() {
 		that.loadStatus = 'loading';
 		if (that.totalPage >= that.page) {
 			let data = {
-				distributor_id: that.userInfo.distributor_id,
-				page: that.page
+				type: that.tabCur,
+				distributor_id: that.userInfo.distributor_id?that.userInfo.distributor_id:0,
+				page: that.page,
+				user_id: that.userInfo.user_id?that.userInfo.user_id:0,
+				
 			}
-			that.getList(data)
+			that.getList(data);
 			return
 		}
 		that.loadStatus = 'nomore'
-		// 模拟数据加载
-		// setTimeout(() => {
-		// 	that.addRandomData();
-		// 	that.loadStatus = 'loadmore';
-		// }, 1000);
 	},
 	methods: {
-		getBanner(){
-			that.$u.get('/api/carouselfigure/list').then(res => {
+		getBanner(data){
+			that.$u.post('/api/carouselfigure/list',data).then(res => {
 				console.log('getBanner',res);
 				let list = res
 				list.map((item,index) => {
@@ -167,17 +196,25 @@ export default {
 			});
 		},
 		getList(data){
-			that.$u.post('/api/video/list_new',data).then(res => {
+			console.log(data)
+			that.$u.post('/api/video/list',data).then(res => {
 				console.log('getList',res);
 				that.totalPage = res.last_page;
+				that.page = data.page
+				let list = res.data
+				list.map((item,index) => {
+					item.guid_id = that.$u.guid();
+				})
+				console.log(list);
 				if (data.page == 1) {
+					that.isPage1 = true
 					that.flowList = []
+				} else {
+					that.isPage1 = false
 				}
-				that.addRandomData(res.data)
-				// that.cmsList = that.cmsList.concat(art)
-				// uni.stopPullDownRefresh();
+				that.flowList = that.flowList.concat(list)
 				that.page++;
-				if(res.data.length == 0){
+				if(res.data.length == 0 || data.page == res.last_page){
 					that.loadStatus = 'nomore';
 					return
 				}
@@ -185,39 +222,45 @@ export default {
 			}).catch(err => {
 				console.log('getList-catch', err);
 			});
-			// this.$u.api.getInfo({id: 3}).then(res => {
-			// 	console.log(res);
-			// })
 		},
-		addRandomData(list) {
-			let flowList = []
-			for (let i = 0; i < list.length; i++) {
-				let index = that.$u.random(0, list.length - 1);
-				// console.log(index);
-				// 先转成字符串再转成对象，避免数组对象引用导致数据混乱
-				let item = JSON.parse(JSON.stringify(list[index]));
-				// console.log(item);
-				item.guid_id = that.$u.guid();
-				// console.log(item);
-				flowList.push(item);
-			}
-			that.flowList = flowList
-			console.log(flowList)
-		},
-		getUserInfo(e){
+		change(e){
+			console.log(e)
+			that.tabCur = e
+			// that.page = 1
 			let data = {
-				wx_openid:e
-			}
-			that.$u.post('/api/user/getUserInfo',data).then(res => {
-				console.log('getUserInfo',res);
+				type: e,
+				distributor_id: that.userInfo.distributor_id?that.userInfo.distributor_id:0,
+				page: 1,
+				user_id: that.userInfo.user_id?that.userInfo.user_id:0,
 				
-			}).catch(err => {
-				console.log('getUserInfo-catch', err);
-			});
+			}
+			that.getList(data);
+			
+		},
+		clearWaterfall() {
+			that.$nextTick(function(){
+				that.$refs.uWaterfall.clear();
+			})
+			
+		},
+		toSearch(){
+			that.$u.route('pages/index/search')
 		},
 		toAdd(e){
-			if(!that.userInfo.username || !that.userInfo.phone){
+			if(!that.userInfo || that.userInfo.username == '' || !that.userInfo.phone){
 				that.$u.route('/pages/login/login');
+				return
+			}
+			if(!that.userInfo.distributor_id){
+				uni.showModal({
+					content: '您还没有绑定商家，无法发布视频，请邀请商家入驻',
+					success(res) {
+						if(res.confirm){
+							that.$u.route('/pages/business/business');
+						}
+					}
+				})
+				
 				return
 			}
 			that.$u.route('/pages/add/add');
@@ -230,20 +273,10 @@ export default {
 		toRoute(e){
 			console.log(e);
 			that.$u.route('/pages/integralMall/integralMall');
-			// uni.switchTab({
-			// 	url: '../mine/mine'
-			// })
 		},
 		toDetail(id){
 			console.log(id);
-			// that.$u.route('/pages/videoDetail/videoDetail');
-			that.$u.route({
-				url: '/pages/videoDetail/videoDetail',
-				params: {
-					id: id
-				}
-			})
-			
+			that.$u.route('/pages/videoDetail/videoDetail',{id: id})
 		},
 		getLocations(){
 			console.log('getLocations');
@@ -252,8 +285,6 @@ export default {
 					console.log(res);
 					that.$u.vuex('longitude', res.longitude)
 					that.$u.vuex('latitude', res.latitude)
-					// that.longitude = res.longitude
-					// that.latitude = res.latitude
 			    },
 				fail(err){
 					console.log(err);
@@ -269,7 +300,6 @@ export default {
 page{
 	background-color: #fff;
 }
-
 .slot-wrap {
 	padding: 0 30rpx;
 	display: flex;
@@ -277,12 +307,21 @@ page{
 	justify-content: center;
 	flex: 1;
 	.logo {
-		height: 50rpx;
-		width: 172rpx;
+		height: 62rpx;
+		width: 100rpx;
 	}
 	.search-wrap{
 		flex: 1;
 		margin-left: 30rpx;
+		.searchContainer{
+			background-color: #fff;
+			height: 56rpx;
+			box-shadow: 0px 0px 6px 0px rgba(216, 216, 216, 0.5);
+			border-radius: 40rpx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
 	}
 }
 .p-swiper /deep/ .u-indicator-item-round{
@@ -317,9 +356,19 @@ page{
 		position: relative;
 		.demo-title{
 			font-size: 28rpx;
-			margin-top: 5px;
+			margin-top: 10rpx;
 			color: $u-main-color;
 			padding: 0 6rpx;
+			.demo-near{
+				top: -65rpx;
+				left: 20rpx;
+				font-size: 20rpx;
+				line-height: 40rpx;
+				height: 40rpx;
+				color: #fff;
+				background-color: rgba(0, 0, 0, 0.6);
+				border-radius: 6rpx;
+			}
 		}
 		.demo-bottom{
 			.avatar-container{
@@ -346,6 +395,5 @@ page{
 	justify-content: center;
 	background-color: rgba(255,255,255,0);
 	color: $u-content-color;
-	
 }
 </style>

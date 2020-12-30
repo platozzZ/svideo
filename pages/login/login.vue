@@ -1,12 +1,12 @@
 <template>
 	<view class="login">
-		<u-navbar title="获取授权"></u-navbar>
-		<view class="getAuthorize" v-if="!userInfo.username">
+		<!-- <u-navbar title="获取授权"></u-navbar> -->
+		<view class="getAuthorize" v-if="!userInfo || userInfo.username == ''">
 			<u-button class="btn" shape="square" :custom-style="customStyle" open-type="getUserInfo" @getuserinfo="getUserInfo" hover-class="none">
 				<u-icon name="weixin-fill" color="#fff" size="40"></u-icon><text class="u-m-l-10">获取微信授权</text>
 			</u-button>
 		</view>
-		<view class="getAuthorize" v-if="!!userInfo.username && !userInfo.phone">
+		<view class="getAuthorize" v-else>
 			<u-button class="btn" shape="square" :custom-style="customStyle" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" hover-class="none">
 				<u-icon name="weixin-fill" color="#fff" size="40"></u-icon><text class="u-m-l-10">获取手机号</text>
 			</u-button>
@@ -18,6 +18,23 @@
 			</view>
 		</u-modal>
 		<u-toast ref="uToast" />
+		
+		<u-popup v-model="showBind" mode="center" width="80%" border-radius="8" @close="bindClose">
+			<view class="model-bind bg-pwhite padding-lg">
+				<view class="text-center">
+					请手动绑定手机号
+				</view>
+				<view class="margin-tb">
+					<!-- <u-form-item> -->
+						<u-input placeholder="请输入手机号" v-model="modelPhone" maxlength="11" border type="number" custom-style="customBindStyle"></u-input>
+					<!-- </u-form-item> -->
+				</view>
+				<view>
+					<u-button type="primary" @click="bindPhone">绑定</u-button>
+				</view>
+				
+			</view>
+		</u-popup>
 	</view>
 </template>
 
@@ -39,11 +56,19 @@ export default {
 				left: '0',
 				opacity: 0
 			},
+			modelPhone: '',
+			customBindStyle: {
+				background: '#f1f1f1'
+			}
 		}
 	},
 	onLoad() {
 		that = this
-		console.log(that);
+		console.log('that.userInfo',that.userInfo);
+		console.log('that.userInfo.username',that.userInfo.username);
+		console.log("that.userInfo.username == ''",that.userInfo.username == '');
+		console.log("!that.userInfo || that.userInfo.username == ''",!that.userInfo || that.userInfo.username == '');
+		console.log("!!userInfo && that.userInfo.username != '' && !that.userInfo.phone",!!that.userInfo && that.userInfo.username != '' && !that.userInfo.phone);
 	},
 	methods: {
 		getUserInfo(e){
@@ -57,6 +82,23 @@ export default {
 				userInfo: JSON.stringify(e.detail.userInfo)
 			}
 			that.login(data)
+		},
+		
+		bindPhone(){
+			if(!that.$u.test.mobile(that.modelPhone)){
+				that.$u.toast('请输入正确的手机号')
+				return
+			}
+			let data = {
+				wx_openid: that.openid,
+				phone: that.modelPhone
+			}
+			that.$u.post('api/user/bdphone', data).then(res => {
+				console.log('bindPhone',res);
+				that.$u.vuex('userInfo.phone', that.modelPhone)
+			}).catch(err => {
+				console.log('catch', err);
+			});
 		},
 		login(data){
 			that.$u.post('/api/user/login', data).then(res => {
@@ -85,15 +127,16 @@ export default {
 			console.log('getphone',data);
 			that.$u.post('/api/user/getphone', data).then(res => {
 				console.log('getphone',res);
+				that.$u.vuex('userInfo.phone', res.phone)
 				// that.$u.vuex('token', res.token)
 				// that.$u.vuex('userInfo', res)
-				// that.showToast()
+				that.showToast()
 			}).catch(err => {
 				console.log('catch', err);
 			});
 		},
-		modalCancel(){
-			// that.$u.route({type: 'back'})
+		bindClose(){
+			console.log('bindClose');
 		},
 		showToast() {
 			that.$refs.uToast.show({

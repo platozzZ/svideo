@@ -4,7 +4,9 @@
 .bg-pyellow{
 	background-color: #FFD524;
 }
-
+.bg-pwhite{
+	background-color: #fff;
+}
 .footer{
 	height: calc(90rpx + constant(safe-area-inset-bottom) / 2);
 	height: calc(90rpx + env(safe-area-inset-bottom) / 2);

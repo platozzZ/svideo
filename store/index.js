@@ -12,7 +12,7 @@ try{
 }
 
 // 需要永久存储，且下次APP启动需要取出的，在state中的变量名
-let saveStateKeys = ['openid', 'token', 'isSwitch', 'userInfo', 'latitude', 'longitude', 'isFirstSaveImage'];
+let saveStateKeys = ['openid', 'token', 'userInfo', 'latitude', 'longitude', 'isFirstSaveImage'];
 
 // 保存变量到本地存储中
 const saveLifeData = function(key, value){
@@ -36,10 +36,16 @@ const store = new Vuex.Store({
 		// 如果vuex_version无需保存到本地永久存储，无需lifeData.vuex_version方式
 		vuex_version: '1.0.1',
 		vuex_demo: '绛紫',
+		integral: 0,
+		brandname: '',
+		brandid: '',
+		address: '',
+		addressid: '',
+		examine: 0,
+		showBind: false,
 		userInfo: lifeData.userInfo ? lifeData.userInfo : '',
 		token: lifeData.token ? lifeData.token : '',
 		openid: lifeData.openid ? lifeData.openid : '',
-		isSwitch: lifeData.isSwitch ? lifeData.isSwitch : '',
 		longitude: lifeData.longitude ? lifeData.longitude : '',
 		latitude: lifeData.latitude ? lifeData.latitude : '',
 		isFirstSaveImage: lifeData.isFirstSaveImage ? lifeData.isFirstSaveImage : 0,

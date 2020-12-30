@@ -1,6 +1,6 @@
 <template>
 	<view class="">
-		<u-navbar title="邀请商家入驻"></u-navbar>
+		<!-- <u-navbar title="邀请商家入驻"></u-navbar> -->
 		<!-- <view class="padding-tb-sm padding-lr">
 			<view class="video-container flex align-center justify-center" @click="addVideo" v-if="!model.video">
 				<u-icon name="plus" size="120" color="#c0c4cc"></u-icon>
@@ -13,6 +13,7 @@
 			</view>
 			<view class="tips u-tips-color flex align-center justify-end u-p-t-10 u-font-10">*视频大小不能超过100M</view>
 		</view> -->
+		
 		<view class="u-p-l-30 u-p-r-30 u-p-t-30 u-p-b-50">
 			<view class="u-p-b-30">
 				
@@ -28,7 +29,7 @@
 				</view>
 				<u-upload ref="uUpload" name="license" max-count="1" :show-upload-list="showUploadList" :custom-btn="true" :auto-upload="false" :show-progress="false"
 					@on-list-change="onListChange" :form-data="model"
-					action="https://jjsp.autovlog.com.cn/api/distributor/add"
+					action="https://jjsp.activitysign.com/api/distributor/add"
 				>
 					<view slot="addBtn" class="slot-btn" hover-class="slot-btn__hover" hover-stay-time="150">
 						<u-icon name="plus" size="120" color="#c0c4cc"></u-icon>
@@ -43,14 +44,23 @@
 				<u-form-item :border-bottom="false" label-width="120" label="商家电话" prop="phone">
 					<u-input :border="border" :border-color="borderColor" placeholder="请输入您的手机号码" v-model="model.phone" maxlength="11" type="number"></u-input>
 				</u-form-item>
-				<u-form-item :border-bottom="false" label-width="120" label="联系人名称" prop="real_nam">
-					<u-input :border="border" :border-color="borderColor" placeholder="请输入联系人名称" maxlength="30" v-model="model.real_nam" type="text"></u-input>
+				<u-form-item :border-bottom="false" label-width="120" label="联系人名称" prop="real_name">
+					<u-input :border="border" :border-color="borderColor" placeholder="请输入联系人名称" maxlength="30" v-model="model.real_name" type="text"></u-input>
 				</u-form-item>
 				<u-form-item :border-bottom="false" label-width="120" label="营业时间" prop="work_time">
-					<u-input :border="border" :border-color="borderColor" type="select" :select-open="pickerShow" v-model="model.work_time" placeholder="时/分" @click="pickerShow = true"></u-input>
+					<view class="flex align-center">
+						<u-input :border="border" :border-color="borderColor" type="select" default-time="08:00" :select-open="pickerShow1" v-model="model.start_time" placeholder="时/分" @click="pickerShow1 = true"></u-input>
+						<text class="u-m-l-20 u-m-r-20">-</text> 
+						<u-input :border="border" :border-color="borderColor" type="select" default-time="18:00" :select-open="pickerShow2" v-model="model.end_time" placeholder="时/分" @click="pickerShow2 = true"></u-input>
+				
+					</view>
 				</u-form-item>
 				<u-form-item :border-bottom="false" label-width="120" label="品牌" prop="brand_id">
-					<u-input :border="border" :border-color="borderColor" type="select" :select-open="selectShow" v-model="model.brand_name" placeholder="请选择品牌" @click="selectShow = true"></u-input>
+					<u-input :border="border" :border-color="borderColor" v-model="model.brand_name" :disabled="true" placeholder="请选择品牌" @click="toBrand">
+					</u-input>
+					<!-- <view class="" slot="right">
+						<u-icon name="arrow-right" color="#C0C4CC" size="28"></u-icon>
+					</view> -->
 				</u-form-item>
 				<u-form-item :border-bottom="false" label-width="120" label="商家地址" prop="address">
 					<view class="flex flex-direction response">
@@ -88,8 +98,9 @@
 					<u-input type="textarea" :border="border" border-color="#F6F6F6" height="200" placeholder="输入商家介绍" v-model="model.introduce" />
 				</u-form-item>
 			</u-form>
-			<u-picker v-model="pickerShow" mode="time" :params="params" @confirm="timeConfirm"></u-picker>	
-			<u-select :safe-area-inset-bottom="true" value-name="id" label-name="name" v-model="selectShow" mode="single-column" :list="selectList" @confirm="selectConfirm"></u-select>
+			<u-picker v-model="pickerShow1" mode="time" :params="params" @confirm="timeConfirm1"></u-picker>	
+			<u-picker v-model="pickerShow2" mode="time" :params="params" @confirm="timeConfirm2"></u-picker>	
+			<!-- <u-select :safe-area-inset-bottom="true" value-name="id" label-name="name" v-model="selectShow" mode="single-column" :list="selectList" @confirm="selectConfirm"></u-select> -->
 		
 		</view>
 		<view class="footer">
@@ -104,6 +115,18 @@
 			</view>
 		</view>
 		<u-toast ref="uToast" />
+		<u-popup mode="top" v-model="shareShow" border-radius="10" width="100%" :custom-style="customShareStyle">
+			<view class="shareContainer u-font-30">
+				请点击右上角『 <u-icon name="more-dot-fill" color="#000" size="40"></u-icon> 』发送给您的车商，邀请商家入驻有奖励。
+				<view class="arrow u-abso">
+					 <!-- :style="{right: arrowRight + 'px' }" -->
+					<u-icon name="arrow-up-fill" color="#fff" size="40"></u-icon>
+				</view>
+			</view>
+		</u-popup>
+		<u-modal v-model="modalShow" ref="uModal" :show-title="false" confirm-text="去授权" content="入驻车商需要获得微信授权" @confirm="modalConfirm">
+			
+		</u-modal>
 	</view>
 </template>
 
@@ -115,7 +138,7 @@ export default {
 			model: {
 				user_id: '', //当前登录用户id
 				name: '', //店铺名称
-				real_nam: '', //联系人名称
+				real_name: '', //联系人名称
 				phone: '', //电话号码
 				address: '', //地址
 				latitude: '', //纬度
@@ -123,9 +146,11 @@ export default {
 				is_two: null, //是否是二级经销商
 				introduce: '', //简介
 				license: '', //营业执照base64传输
+				start_time: '',
+				end_time: '',
 				work_time: '',
 				brand_name: '',
-				brand_id: ''
+				brand_id: '',
 			},
 			rules: {
 				name: [
@@ -148,7 +173,7 @@ export default {
 						message: '手机号码不正确',
 					}
 				],
-				real_nam: [
+				real_name: [
 					{
 						required: true,
 						message: '请输入联系人姓名',
@@ -158,6 +183,18 @@ export default {
 					{
 						required: true,
 						message: '请选择营业时间',
+					},
+				],
+				start_time: [
+					{
+						required: true,
+						message: '请选择上班时间',
+					},
+				],
+				end_time: [
+					{
+						required: true,
+						message: '请选择下班时间',
 					},
 				],
 				brand_id: [
@@ -225,7 +262,10 @@ export default {
 			selectList: [],
 			border: true,
 			borderColor: '#F6F6F6',
-			pickerShow: false,
+			pickerShow1: false,
+			pickerShow2: false,
+			startTime: '',
+			endTime: '',
 			selectShow: false,
 			showUploadList: false,
 			params: {
@@ -239,28 +279,135 @@ export default {
 			selectResult: '请选择车辆类型',
 			codeTips: '',
 			errorType: ['toast'],
-			
-			lists: []
+			lists: [],
+			share_openid: '',
+			shareShow: true,
+			customShareStyle: {
+				backgroundColor: 'rgba(255,255,255,0)'
+			},
+			menuButtonInfo: '',
+			sys: '',
+			arrowRight: '',
+			modalShow: false
 			// percent: 0,
 			// progressType: 'success'
 		};
 	},
-	onLoad() {
+	onLoad(options) {
 		that = this
-		console.log(that);
-		that.getBrand()
+		that.$u.vuex('brandid', '')
+		that.$u.vuex('brandname', '')
+		if(!!options.openid){
+			that.share_openid = options.openid
+			that.shareShow = false
+		}
+		console.log('that.openid',that.openid);
+		console.log('!that.openid',!that.openid);
+		if(!that.openid){
+			that.$getOpenid(that)
+		} else {
+			that.$getUserInfo(that,that.openid)
+			if(!options.openid){
+				return
+			}
+			let bindData = {
+				wx_openid: that.openid,
+				father_openid: options.openid,
+				type: 1
+			}
+			console.log(bindData)
+			that.$bindUser(that,bindData)
+		}
+		// #ifdef MP-WEIXIN
+			let menuButtonInfo = uni.getMenuButtonBoundingClientRect()
+			console.log('menuButtonInfo',menuButtonInfo);
+			// that.menuButtonInfo = menuButtonInfo
+			let sys = that.$u.sys()
+			console.log('that.sys',that.sys);
+			let arrowRight = sys.screenWidth - menuButtonInfo.left - menuButtonInfo.width/4
+			console.log(arrowRight);
+			that.arrowRight = arrowRight
+		// #endif
 		if(!that.latitude || !that.longitude){
 			that.getLocations()
 		}
-		that.model.user_id = that.userInfo.user_id
-		console.log(that.model)
+		if(!that.userInfo || that.userInfo.username == ''){
+			that.modalShow = true
+			return
+		}
+		
+	},
+	computed: {
+		worktime: function(){
+			if(!this.model.start_time || !this.model.end_time){
+				return 
+			}
+			return this.model.start_time + '-' + this.model.end_time
+		}
+	},
+	watch: {
+	    openid(val) {
+			console.log('val', val);
+			if(!val){
+				return
+			}
+			this.$getUserInfo(this,val)
+			if(!that.share_openid){
+				return
+			}
+			let bindData = {
+				wx_openid: val,
+				father_openid: that.share_openid,
+				type: 1
+			}
+			console.log(bindData)
+			that.$bindUser(that,bindData)
+	    },
+		brandname(newVal, oldVal) {
+			this.$set(this.model, 'brand_name', newVal)
+		},
+		brandid(newVal, oldVal) {
+			this.$set(this.model, 'brand_id', newVal)
+		},
+		worktime(newVal, oldVal) {
+			this.$set(this.model, 'work_time', newVal)
+		},
+		// 'model.brandname' (nval, oval) {
+		//     that.model.brand_
+		// },
+		// 'model.brandid' (nval, oval) {
+		//     return this.brandid
+		// },
 	},
 	onReady() {
 		this.$refs.uForm.setRules(this.rules);
 	},
+	onShow() {
+		that.model.user_id = that.userInfo.user_id
+		console.log('that.brandname',that.brandname);
+	},
+	onShareAppMessage() {
+		console.log('onShareAppMessage');
+		// that.share()
+		return {
+			title: '邀请商家入驻',
+			path: '/pages/business/business?openid=' + that.openid,
+			success(){
+				console.log('onShareAppMessage-success');
+			}
+		}
+	},
 	methods: {
 		submit() {
+			// that.$refs.uToast.show({
+			// 	title: "发布成功，等待审核",
+			// 	type: 'success',
+			// 	icon: false,
+			// 	url: '/pages/inviteClerk/inviteClerk'
+			// })
+			// return
 			that.$refs.uForm.validate(valid => {
+					console.log(that.model);
 				if (valid) {
 					that.add(that.model)
 					console.log('验证通过');
@@ -274,7 +421,7 @@ export default {
 			  // that.$refs.uUpload.upload();
 			  // return
 			let uploadTask = uni.uploadFile({
-				url: "https://jjsp.autovlog.com.cn/api/distributor/add",
+				url: "https://jjsp.activitysign.com/api/distributor/add",
 				formData: data,
 				filePath: data.license,
 				name: "license",
@@ -285,8 +432,21 @@ export default {
 						let art = JSON.parse(res.data)
 						console.log(art)
 						if (art.statusCode == 200) {
-							that.showToast("发布成功，等待审核",'success',true) 
+							// that.showToast("发布成功，等待审核",'success',true) 
+							that.$refs.uToast.show({
+								title: "发布成功，等待审核",
+								type: 'success',
+								icon: false,
+								url: '/pages/inviteClerk/inviteClerk?id=' + art.data.distributor_id
+							})
 							// that.progressType = 'success'
+						} else if(art.statusCode == 201){
+							that.$refs.uToast.show({
+								title: art.message,
+								type: 'warning',
+								icon: false,
+								url: '/pages/login/login'
+							})
 						} else {
 							that.showToast(art.message,'warning',true)
 							// that.progressType = 'warning'
@@ -342,31 +502,22 @@ export default {
 				}
 			});
 		},
-		
+		toBrand(){
+			that.$u.route('/pages/business/brand');
+		},
 		radioGroupChange(e) {
 			console.log(e);
 			that.model.is_two = e;
 		},
-		getBrand(){ // /api/distributor/brand
-			that.$u.post('/api/distributor/brand').then(res => {
-				console.log('getBrand',res);
-				that.selectList = res
-			}).catch(err => {
-				console.log('getBrand-catch', err);
-			});
-		},
-		showSelect() {
-			that.selectShow = true;
-		},
-		selectConfirm(e) {
+		timeConfirm1(e){
 			console.log(e);
-			that.model.brand_name = e[0].label
-			that.model.brand_id = e[0].value
+			// that.startTime = e.hour + ':' + e.minute;
+			that.model.start_time = e.hour + ':' + e.minute;
 		},
-		
-		timeConfirm(e){
+		timeConfirm2(e){
 			console.log(e);
-			that.model.work_time = e.hour + ':' + e.minute;
+			// that.endTime = e.hour + ':' + e.minute;
+			that.model.end_time = e.hour + ':' + e.minute;
 		},
 		licenseTips() {
 			that.$u.toast('请上传营业执照')
@@ -387,6 +538,9 @@ export default {
 			}
 			console.log(that.model);
 			that.model.license = lists[0].url
+		},
+		modalConfirm(){
+			that.$u.route('/pages/login/login');
 		},
 		showToast(title,type,back) {
 			if(back){
@@ -520,4 +674,30 @@ page{
 	}
 	
 }
+
+
+/deep/{
+	.u-drawer{
+		.u-drawer-content{
+			background-color: rgba(255,255,255,0)!important;
+			.shareContainer{
+				position: relative;
+				left: 15px;
+				margin-top: 30px;
+				width: calc(100% - 30px);
+				padding: 30rpx;
+				background-color: #fff;
+				border-radius: 10rpx;
+				z-index: 10099;
+				.arrow{
+					position: absolute;
+					top: -14px;
+					right: 55px;
+					z-index: 10099;
+				}
+			}
+		}
+	}
+	
+} 
 </style>

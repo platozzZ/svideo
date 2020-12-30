@@ -1,12 +1,12 @@
 <template>
 	<view class="">
-		<u-navbar title="积分商城"></u-navbar>
+		<!-- <u-navbar title="积分商城"></u-navbar> -->
 		<view class="container">
-			<view class="padding-tb-sm padding-lr">
+			<!-- <view class="padding-tb-sm padding-lr">
 				<u-swiper :height="320" :list="swiperList" :title="title"
 				 :title-style="swiperStyle" :interval="30000"></u-swiper>
-			</view>
-			<view class="mall-nav padding-lr padding-tb-sm">
+			</view> -->
+			<!-- <view class="mall-nav padding-lr padding-tb-sm">
 				<view class="mall-nav-item" v-for="(item,index) in 3" :key="index" @click="toRoute">
 					<view class="mall-nav-img">
 						<u-image src="https://cdn.uviewui.com/uview/example/fade.jpg" height="100%"></u-image>
@@ -19,23 +19,26 @@
 					</view>
 				</view>
 				
-			</view>
+			</view> -->
 			<view class="mall-list">
-				<view class="mall-item" v-for="(item,index) in 12" :key="index">
+				<view class="mall-item" :id="'item' + index" v-for="(item,index) in list" :key="index" @click="toRoute(item.id)">
+					 <!-- :style="{height: imgBoxHeight + 'px'}" -->
 					<view class="mall-item-img" :style="{height: imgBoxHeight + 'px'}">
-						<u-image src="https://cdn.uviewui.com/uview/template/SmilingDog.jpg" height="100%"></u-image>
+						  <!-- height="100%" -->
+						<u-image :src="item.imgurl" mode="aspectFill" height="100%"></u-image>
 					</view>
 					<view class="title">
-						轻型厢  SQ-01轻型厢轻型厢  SQ-01
+						{{item.product_title}}
 					</view>
 					<view class="sub">
-						意大利出品  耐用持久
+						{{item.subtitle}}
 					</view>
 					<view class="price">
-						4545积分
+						{{item.integral + '积分'}}
 					</view>
 				</view>
 			</view>
+				<u-loadmore :is-dot="true" :status="loadStatus" margin-top="20" margin-bottom="20"></u-loadmore>
 		</view>
 	</view>
 </template>
@@ -64,8 +67,10 @@ export default {
 				paddingBottom: '32rpx'
 			},
 			title: false,
+			page: 1,
+			totalPage: 0,
 			loadStatus: 'loadmore',
-			flowList: [],
+			list: [],
 			span: 4,
 			listSpan: 2,
 			offset: 0,
@@ -75,19 +80,52 @@ export default {
 	},
 	onLoad() {
 		that = this
-		that.$nextTick(function(){
-			const query = uni.createSelectorQuery().in(this).select('.mall-item');
-			uni.createSelectorQuery().select('.mall-item').boundingClientRect(res => {
-				console.log(res);
-				that.imgBoxHeight = res.width
-			}).exec()
-			
-		})
+		let data = {
+			page: 1
+		}
+		that.getList(data)
+		
+	},
+	onReachBottom() {
+		that.loadStatus = 'loading';
+		if (that.totalPage >= that.page) {
+			let data = {
+				page: that.page,
+			}
+			that.getList(data)
+			return
+		}
+		that.loadStatus = 'nomore'
 	},
 	methods: {
+		getList(data){ // /api/integral/index
+			that.$u.post('/api/integral/index', data).then(res => {
+				console.log('getList',res);
+				that.totalPage = res.last_page;
+				if (data.page == 1) {
+					that.list = []
+				}
+				that.list = that.list.concat(res.data)
+				that.page++;
+				that.$nextTick(function(){
+					const query = uni.createSelectorQuery().in(that);
+					query.select(".mall-item").boundingClientRect(data=>{
+					   console.log('获取单个dom节点：',data)
+					   that.imgBoxHeight = res.width
+					}).exec(); 
+				})
+				if(res.data.length == 0 || data.page == res.last_page){
+					that.loadStatus = 'nomore';
+					return
+				}
+				that.loadStatus = 'loadmore';
+			}).catch(err => {
+				console.log('catch', err);
+			});
+		},
 		toRoute(e){
 			console.log(e);
-			that.$u.route('/pages/integralMall/mallDetail');
+			that.$u.route('/pages/integralMall/mallDetail',{id: e});
 			// uni.switchTab({
 			// 	url: '../mine/mine'
 			// })

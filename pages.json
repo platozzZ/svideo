@@ -10,29 +10,7 @@
 		{
 			"path": "pages/enroll/enroll",
 			"style": {
-				"navigationBarTitleText": "活动",
-				"navigationStyle":"custom"
-			}	
-		},
-		{
-			"path": "pages/select/select",
-			"style": {
-				"navigationBarTitleText": "精选",
-				"navigationStyle":"custom"
-			}	
-		},
-		{
-			"path": "pages/add/add",
-			"style": {
-				"navigationBarTitleText": "发布视频",
-				"navigationStyle":"custom"
-			}	
-		},
-		{
-			"path": "pages/message/message",
-			"style": {
-				"navigationBarTitleText": "消息",
-				"navigationStyle":"custom"
+				"navigationBarTitleText": "活动"
 			}	
 		},
 		{
@@ -43,6 +21,43 @@
 			}	
 		},
 		{
+			"path": "pages/select/select",
+			"style": {
+				"navigationBarTitleText": "精选"
+			}	
+		},
+		{
+			"path": "pages/add/add",
+			"style": {
+				"navigationBarTitleText": "发布视频"
+			}	
+		},
+		{
+			"path": "pages/index/search",
+			"style": {
+				"navigationBarTitleText": "搜索"
+			}	
+		},
+		{
+			"path": "pages/message/message",
+			"style": {
+				"navigationBarTitleText": "消息"
+			}	
+		},
+		{
+			"path": "pages/enrollDetail/enrollDetail",
+			"style": {
+				"navigationBarTitleText": "活动详情",
+				"navigationStyle":"custom"
+			}	
+		},
+		{
+			"path": "pages/enrollDetail/enrollSign",
+			"style": {
+				"navigationBarTitleText": "活动报名"
+			}	
+		},
+		{
 			"path": "pages/order/order",
 			"style": {
 				"navigationBarTitleText": "我的订单",
@@ -50,39 +65,64 @@
 			}	
 		},
 		{
+			"path": "pages/order/orderDetail",
+			"style": {
+				"navigationBarTitleText": "订单详情"
+			}	
+		},
+		{
+			"path": "pages/logistics/index",
+			"style": {
+				"navigationBarTitleText": "物流详情"
+			}	
+		},
+		{
 			"path": "pages/login/login",
 			"style": {
-				"navigationBarTitleText": "登录",
-				"navigationStyle":"custom"
+				"navigationBarTitleText": "获取授权"
 			}	
 		},
 		{
 			"path": "pages/login/success",
 			"style": {
-				"navigationBarTitleText": "登录成功",
-				"navigationStyle":"custom"
+				"navigationBarTitleText": "登录成功"
 			}	
 		},
 		{
 			"path": "pages/videoDetail/videoDetail",
 			"style": {
-				"navigationBarTitleText": "视频详情",
-				"navigationStyle":"custom"
+				"navigationBarTitleText": "视频详情"
 			}	
 		},
 		{
 			"path": "pages/integralMall/integralMall",
 			"style": {
-				"navigationBarTitleText": "积分商城",
-				"navigationStyle":"custom"
+				"navigationBarTitleText": "积分商城"
 			}	
 		},
 		{
 			"path": "pages/integralMall/mallDetail",
 			"style": {
 				"navigationBarTitleText": "商品详情",
-				"navigationStyle":"custom",
 				"enablePullDownRefresh": true
+			}	
+		},
+		{
+			"path": "pages/exchange/index",
+			"style": {
+				"navigationBarTitleText": "订单填写"
+			}	
+		},
+		{
+			"path": "pages/address/index",
+			"style": {
+				"navigationBarTitleText": "我的地址"
+			}	
+		},
+		{
+			"path": "pages/addressadd/index",
+			"style": {
+				"navigationBarTitleText": "新建地址"
 			}	
 		},
 		{
@@ -95,50 +135,73 @@
 		{
 			"path": "pages/business/business",
 			"style": {
-				"navigationBarTitleText": "商家入驻",
-				"navigationStyle":"custom"
+				"navigationBarTitleText": "商家入驻"
+			}	
+		},
+		{
+			"path": "pages/business/brand",
+			"style": {
+				"navigationBarTitleText": "品牌选择"
 			}	
 		},
 		{
 			"path": "pages/mineList/collect",
 			"style": {
-				"navigationBarTitleText": "我的收藏",
-				"navigationStyle":"custom"
+				"navigationBarTitleText": "我的收藏"
 			}	
 		},
 		{
 			"path": "pages/mineList/history",
 			"style": {
-				"navigationBarTitleText": "浏览历史",
-				"navigationStyle":"custom"
+				"navigationBarTitleText": "播放历史"
 			}	
 		},
 		{
 			"path": "pages/mineList/feedback",
 			"style": {
-				"navigationBarTitleText": "意见反馈",
-				"navigationStyle":"custom"
+				"navigationBarTitleText": "意见反馈"
 			}	
 		},
 		{
 			"path": "pages/mineList/report",
 			"style": {
-				"navigationBarTitleText": "举报",
-				"navigationStyle":"custom"
+				"navigationBarTitleText": "举报"
 			}	
 		},
 		{
 			"path": "pages/mineList/poster",
 			"style": {
-				"navigationBarTitleText": "我的转发",
-				"navigationStyle":"custom"
+				"navigationBarTitleText": "我的海报"
 			}	
 		},
 		{
 			"path": "pages/mineList/review",
 			"style": {
-				"navigationBarTitleText": "我的视频",
-				"navigationStyle":"custom"
+				"navigationBarTitleText": "审核列表"
+			}	
+		},
+		{
+			"path": "pages/mineList/video",
+			"style": {
+				"navigationBarTitleText": "我的视频"
+			}	
+		},
+		{
+			"path": "pages/mineList/share",
+			"style": {
+				"navigationBarTitleText": "我的转发"
+			}	
+		},
+		{
+			"path": "pages/inviteClerk/inviteClerk",
+			"style": {
+				"navigationBarTitleText": "邀请店员二维码"
+			}	
+		},
+		{
+			"path": "pages/inviteBus/inviteBus",
+			"style": {
+				"navigationBarTitleText": "邀请商家入驻"
 			}	
 		}
 	],

@@ -1,6 +1,6 @@
 <template>
 	<view class="">
-		<u-navbar title="视频详情"></u-navbar>
+		<!-- <u-navbar title="视频详情"></u-navbar> -->
 		<block v-if="showContainer">
 		<view class="" v-if="showVideo">
 			<video class="video" id="myVideo" 
@@ -15,7 +15,8 @@
 			<view class="title">{{art.title}}</view>
 			<view class="info flex align-center justify-between">
 				<view class="left flex align-center">
-					<image :src="art.photo" class="avatar"></image>
+					<!-- <image :src="art.photo" class="avatar"></image> -->
+					<u-avatar :src="art.photo" size="42"></u-avatar>
 					<text class="margin-lr-xs">{{art.username}}</text>
 					<!-- <view class="btn-follow"> + 关注</view> -->
 					<!-- <u-button @click="btnClick" size="mini" :hairLine="false" :custom-style="customStyle">关注</u-button> -->
@@ -29,7 +30,8 @@
 			</view>
 			
 			<view class="ad" v-if="art.ad" @click="toDetail(art.ad.video_id)">
-				<image :src="art.ad.img_url" mode=""></image>
+				<!-- <image :src="art.ad.img_url" mode=""></image> -->
+				<u-image width="100%" height="100%" :src="art.ad.img_url"></u-image>
 			</view>
 			<view class="">
 				<u-tabs name="cate_name" :list="list" :is-scroll="false" inactive-color="#909399" active-color="#F5CB2B" :active-item-style="activeStyle" bar-width="80" :current="current" @change="change"></u-tabs>
@@ -48,31 +50,45 @@
 			<view class="footer-seat"></view>
 			<view class="footer-content">
 				<view class="handle flex align-center justify-around padding-lr-sm padding-top-xs solid-top u-rela">
-					<view class="handle-mask u-abso" v-if="!userInfo.username" @click="toLogin"></view>
+					<view class="handle-mask u-abso" v-if="!userInfo || userInfo.username == ''" @click="toLogin"></view>
 					<view class="handle-item" @click="tpaCollect">
-						<image src="../../static/image/videodetail/collect.png" mode="widthFix" v-if="art.is_collect == 0"></image>
-						<image src="../../static/image/videodetail/collect_select.png" mode="widthFix" v-else></image>
+						<u-image width="100%" mode="widthFix" src="https://jjsp.activitysign.com/image/videodetail/collect.png" v-if="art.is_collect == 0"></u-image>
+						<u-image width="100%" mode="widthFix" src="https://jjsp.activitysign.com/image/videodetail/collect_select.png" v-else></u-image>
+						<!-- <image src="https://jjsp.activitysign.com/image/videodetail/collect.png" mode="widthFix" v-if="art.is_collect == 0"></image>
+						<image src="https://jjsp.activitysign.com/image/videodetail/collect_select.png" mode="widthFix" v-else></image> -->
 					</view>
-					<view class="handle-item">
-						<view class="share-btn u-abso">
+					<view class="handle-item" @click="tapShare">
+						<!-- <view class="share-btn u-abso">
 							<u-button :custom-style="customStyle" open-type="share" @click="tapShare"></u-button>
-						</view>
-						<image src="../../static/image/videodetail/share.png" mode="widthFix"></image>
+						</view> -->
+						<u-image width="100%" mode="widthFix" src="https://jjsp.activitysign.com/image/videodetail/share.png"></u-image>
 					</view>
 					<view class="handle-item" @click="showComment">
-						<image src="../../static/image/videodetail/comment.png" mode="widthFix"></image>
-						<u-badge color=" #0B0B0B" bgColor="rgba(255,255,255,0)" :offset="offset" :count="art.comment"></u-badge>
+						<!-- <image src="https://jjsp.activitysign.com/image/videodetail/comment.png" mode="widthFix"></image> -->
+						<u-image width="100%" mode="widthFix" src="https://jjsp.activitysign.com/image/videodetail/comment.png"></u-image>
+						<!-- <u-badge color=" #0B0B0B" bgColor="rgba(255,255,255,0)" :offset="offset" :count="art.comment"></u-badge> -->
 					</view>
 					<view class="handle-item" @click="makePhoneCall">
-						<image src="../../static/image/videodetail/phone.png" mode="widthFix"></image>
+						<!-- <image src="https://jjsp.activitysign.com/image/videodetail/phone.png" mode="widthFix"></image> -->
+						<u-image width="100%" mode="widthFix" src="https://jjsp.activitysign.com/image/videodetail/phone.png"></u-image>
 					</view>
 					<view class="handle-item" @click="tapPoster">
-						<image src="../../static/image/videodetail/poster.png" mode="widthFix"></image>
+						<!-- <image src="https://jjsp.activitysign.com/image/videodetail/poster.png" mode="widthFix"></image> -->
+						<u-image width="100%" mode="widthFix" src="https://jjsp.activitysign.com/image/videodetail/poster.png"></u-image>
 					</view>
 				</view>
 			</view>
 		</view>
 		</block>
+		<u-popup mode="top" v-model="shareShow" border-radius="10" width="100%" :custom-style="customShareStyle">
+			<view class="shareContainer u-font-30">
+				请点击右上角『 <u-icon name="more-dot-fill" color="#000" size="40"></u-icon> 』，选择『发送给朋友』或者『分享到朋友圈』
+				<view class="arrow u-abso">
+					 <!-- :style="{right: arrowRight + 'px' }" -->
+					<u-icon name="arrow-up-fill" color="#fff" size="40"></u-icon>
+				</view>
+			</view>
+		</u-popup>
 		<u-popup border-radius="40" v-model="show"
 			mode="bottom" 
 			:closeable="true"
@@ -80,42 +96,22 @@
 			>
 			<view class="content flex flex-direction">
 				<view class="title u-border-bottom">
-					全部评论
+					咨询留言
 				</view>
-				<scroll-view class="flex-sub" scroll-y="true" style="max-height: 800rpx;">
-					<view class="flex align-center justify-center" style="height: 400rpx;" v-if="commentList.length == 0">
-						暂无评论
+				<view class="padding">
+					<u-input v-model="commentValue" type="textarea" height="100" :clearable="false" :auto-height="false" :fixed="true" :custom-style="commentCustomStyle" placeholder="说点什么吧" />
+					<view class="flex align-center justify-center">
+						<!-- <u-button type="warning" @click="addComment">发送</u-button> -->
+						<view class="u-main-color u-font-30 btn u-m-t-30" @click="addComment">发送</view>
 					</view>
-					<view class="p-list" v-else>
-						<view class="p-item u-border-bottom" v-for="(item,index) in commentList" :key="index">
-							<view class="p-avatar">
-								<u-avatar src="../static/image/loginlogo.png" size="68"></u-avatar>
-							</view>
-							<view class="p-content">
-								<view class="p-content-t u-tips-color u-font-24 u-m-b-10">
-									<text class="u-m-r-40 u-main-color">那么那</text>
-									<text> 12小时前</text>
-								</view>
-								<view class="p-content-c u-main-color u-font-28">
-									巧了，刚想去呢，这就来了巧了，刚想去呢，这就来了巧了，刚想去呢，这就来了巧了，刚想去呢，这就来了
-								</view>
-							</view>
-							<view class="p-action">
-								<u-icon name="heart" color="#7D7D7D" size="46"></u-icon>
-							</view>
-						</view>
-					</view>
-				</scroll-view>
-				<view class="confrim-btn padding-lr padding-tb-xs">
+					
+				</view>
+				<!-- <view class="confrim-btn padding-lr padding-tb-xs">
 					<u-form-item>
 						<u-input v-model="commentValue" height="60" type="text" :clearable="false" :custom-style="commentCustomStyle" placeholder="说点什么吧" />
-						<view slot="right" class="u-main-color u-font-30 u-p-l-20" @click="sendComment">发送</view>
+						<view slot="right" class="u-main-color u-font-30 u-p-l-20" @click="addComment">发送</view>
 					</u-form-item>
-					<!-- <u-input v-model="commentValue" height="60" type="text" :clearable="false" :custom-style="commentCustomStyle" placeholder="说点什么吧" />
-					<view class="u-p-l-30">
-						发送
-					</view> -->
-				</view>
+				</view> -->
 			</view>
 		</u-popup>
 		
@@ -129,9 +125,10 @@
 			close-icon-size="40"
 			:safe-area-inset-bottom="true"
 			>
-			<view class="content flex flex-direction align-center justify-center u-p-l-50 u-p-r-50 u-p-t-50">
+			<view class="pop-content flex flex-direction align-center justify-center u-p-t-50">
 				<view class="response">
-					<u-image mode="widthFix" border-radius="10" width="100%" src="https://img-blog.csdnimg.cn/20190124095040684.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE3NDcwMTY1,size_16,color_FFFFFF,t_70"></u-image>
+					<!-- art.share_img -->
+					<u-image mode="widthFix" border-radius="10" width="100%" :src="art.share_img"></u-image>
 					
 				</view>
 				<view class="u-m-t-50">
@@ -145,6 +142,7 @@
 				<u-button :custom-style="modalCustomStyle" open-type="openSetting" @click="modalConfirm"></u-button>
 			</view>
 		</u-modal>
+		<u-toast ref="uToast" />
 	</view>
 </template>
 
@@ -189,53 +187,114 @@ export default {
 			commentList: [],
 			commentValue: '',
 			commentCustomStyle: {
-				background: '#fff',
-				padding: '0 20rpx',
+				background: '#f1f1f1',
+				padding: '10rpx 20rpx',
 				borderRadius: '6rpx'
 			},
-			showContainer: false
+			showContainer: false,
+			share_openid: '',
+			shareShow: false,
+			customShareStyle: {
+				backgroundColor: 'rgba(255,255,255,0)'
+			},
+			menuButtonInfo: '',
+			sys: '',
+			arrowRight: ''
 		}
 	},
 	onLoad(options) {
 		that = this
+		if(!that.openid){
+			that.$getOpenid(that)
+		} else {
+			that.$getUserInfo(that,that.openid)
+			if(!!options.openid){
+				let bindData = {
+					wx_openid: that.openid,
+					father_openid: options.openid,
+					type: 0
+				}
+				console.log(bindData)
+				that.$bindUser(that,bindData)
+			}
+		}
+		if(!!options.openid){
+			that.share_openid = options.openid
+		}
+		// #ifdef MP-WEIXIN
+			let menuButtonInfo = uni.getMenuButtonBoundingClientRect()
+			console.log('menuButtonInfo',menuButtonInfo);
+			// that.menuButtonInfo = menuButtonInfo
+			let sys = that.$u.sys()
+			console.log('that.sys',that.sys);
+			let arrowRight = sys.screenWidth - menuButtonInfo.left - menuButtonInfo.width/4
+			console.log(arrowRight);
+			that.arrowRight = arrowRight
+		// #endif
 		console.log(options);
 		that.newsId = options.id
+		
 		let data = {
 			news_id: options.id,
-			user_id: that.userInfo.user_id
+			user_id: that.userInfo.user_id || 0
 		}
 		that.getInfo(data)
+		
 	},
-	onReady: function(res) {
-		// #ifndef MP-ALIPAY || MP-TOUTIAO
-		this.videoContext = uni.createVideoContext('myVideo')
-		// #endif
-		// #ifdef APP-PLUS || MP-BAIDU
-		setTimeout(()=>{
-			this.showVideo = true
-		},350)
-		// #endif
+	// computed: {
+	//     myopenid() {
+	//         return this.openid
+	//     }
+	// },
+	watch: {
+	    openid(val) {
+	    	console.log('val', val);
+	    	if(!val){
+	    		return
+	    	}
+	    	this.$getUserInfo(this,val)
+	    	if(!that.share_openid){
+	    		return
+	    	}
+	    	let bindData = {
+	    		wx_openid: val,
+	    		father_openid: that.share_openid,
+	    		type: 0
+	    	}
+	    	console.log(bindData)
+	    	that.$bindUser(that,bindData)
+	    },
+		// share_openid(nval, oval){
+		// 	let bindData = {
+		// 		wx_openid: that.openid,
+		// 		father_openid: nval,
+		// 		type: 0
+		// 	}
+		// 	console.log(bindData)
+		// 	that.$bindUser(that,bindData)
+		// },
+	},
+	onReady(res) {
 		// #ifndef APP-PLUS || MP-BAIDU
 		this.showVideo = true
 		// #endif
 	},
 	onShareAppMessage() {
 		console.log('onShareAppMessage');
-				that.share()
+		that.share()
 		return {
-			title: '自定义转发标题',
-			path: '/page/user?id=123',
+			title: that.art.title,
+			path: '/pages/videoDetail/videoDetail?id=' + that.newsId + '&openid=' + that.openid,
 			success(){
 				console.log('onShareAppMessage-success');
 			}
 		}
-	    // return custom share data when user share.
 	},
 	onShareTimeline() { //测试API 仅限安卓部分版本
 		console.log('onShareTimeline');
 	    return{
 			title: that.art.title,
-			query: 'a=1&b=2'
+			query: 'id=' + that.newsId + '&openid=' + that.openid
 		}
 	},
 	methods: {
@@ -244,7 +303,7 @@ export default {
 				console.log('getInfo',res);
 				that.art = res
 				that.showContainer = true
-				that.getComment(that.newsId)
+				// that.getComment(that.newsId)
 			}).catch(err => {
 				console.log('getList-catch', err);
 			});
@@ -280,15 +339,52 @@ export default {
 			that.videoPlayer(1)
 		},
 		showComment(){
+			if(!that.userInfo.phone){
+				that.$u.route('/pages/login/login')
+				return
+			}
 			that.show = true
 		},
-		addComment(){ // /api/comment/commentadd
-			that.$u.post('/api/video/info',data).then(res => {
-				console.log('getInfo',res);
-				that.art = res
+		hideComment(){
+			that.show = false
+			that.commentValue = ''
+		},
+		addComment(){
+			if(!that.$u.trim(that.commentValue)){
+				that.showToast('请输入内容','warning')
+				return
+			}
+			let data = {
+				news_id: that.newsId,
+				user_id: that.userInfo.user_id,
+				content: that.commentValue,
+			}
+			that.$u.post('/api/comment/commentadd',data).then(res => {
+				console.log('addComment',res);
+				// that.art = res
+				that.showToast('留言成功','success')
+				// that.getComment(that.newsId)
+				that.hideComment()
+			}).catch(err => {
+				that.showToast(err.message,'error')
+				console.log('addComment-catch', err);
+			});
+		},
+		commentLikes(){ // /api/comment/likes
+			let data = {
+				news_id: that.newsId,
+				user_id: that.userInfo.user_id,
+				content: that.commentValue,
+				comment_id: ''
+				// type	string	
+				// 类型 likes 表示点赞
+			}
+			that.$u.post('/api/comment/likes',data).then(res => {
+				console.log('commentLikes',res);
+				// that.art = res
 				that.getComment(that.newsId)
 			}).catch(err => {
-				console.log('getList-catch', err);
+				console.log('commentLikes-catch', err);
 			});
 		},
 		// https://qn.kemean.cn/upload/202006/05/15913462289486a12js7d.png
@@ -297,8 +393,21 @@ export default {
 				that.$u.route('/pages/login/login')
 				return
 			}
+			that.makePhoneRequest()
 			uni.makePhoneCall({
 			    phoneNumber: that.art.phone
+			});
+		},
+		makePhoneRequest(){
+			let data = {
+				news_id: that.newsId,
+				user_id: that.userInfo.user_id,
+			}
+			that.$u.post('/api/news/user_phone',data).then(res => {
+				console.log('makePhoneRequest',res);
+				// that.art = res
+			}).catch(err => {
+				console.log('makePhoneRequest-catch', err);
 			});
 		},
 		share(){ // /api/news/share
@@ -309,15 +418,18 @@ export default {
 			console.log('share-data:',data);
 			that.$u.post('/api/news/share',data).then(res => {
 				console.log('share',res);
-				// that.$u.toast('收藏成功')
+				that.showToast('分享成功','success')
 				// that.$set(that.art,'is_collect',that.art.is_collect == 0?1:0)
 				// that.art = res
 			}).catch(err => {
+				that.showToast(err.message,'error')
 				console.log('share-catch', err);
 			});
 		},
 		tapShare(e){
+			that.shareShow = true
 			console.log(e);
+			// that.share()
 		},
 		tapPoster(e){
 			console.log(e);
@@ -333,6 +445,12 @@ export default {
 			that.$u.post('/api/news/collect',data).then(res => {
 				console.log('tpaCollect',res);
 				// that.$u.toast('收藏成功')
+				if(data.type == 0){
+					that.showToast('收藏成功','success')
+				} else {
+					that.showToast('已取消收藏','success')
+				}
+				
 				that.$set(that.art,'is_collect',that.art.is_collect == 0?1:0)
 				// that.art = res
 			}).catch(err => {
@@ -378,7 +496,7 @@ export default {
 		},
 		saveImage(){
 			uni.downloadFile({
-			    url: 'https://img-blog.csdnimg.cn/20190124095040684.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzE3NDcwMTY1,size_16,color_FFFFFF,t_70', 
+			    url: that.art.share_img, 
 			    success: (res) => {
 					console.log(res);
 			        if (res.statusCode === 200) {
@@ -386,7 +504,8 @@ export default {
 						uni.saveImageToPhotosAlbum({
 							filePath: res.tempFilePath,
 							success: function () {
-								
+								that.showToast('保存成功','success')
+								that.posterShow = false
 								console.log('save success');
 							}
 						});
@@ -410,8 +529,17 @@ export default {
 			that.$u.route('/pages/login/login');
 		},
 		change(index) {
+			console.log(index);
 			this.current = index;
-		}
+		},
+		showToast(title,type) {
+			that.$refs.uToast.show({
+				title: title,
+				type: type,
+				icon: false
+			})
+			
+		},
 	}
 }
 </script>
@@ -550,5 +678,44 @@ page{
 	.confrim-btn{
 		background: #F8F8F8;
 	}
+	.btn{
+		background-color: #FFD524;
+		width: 100%;
+		line-height: 70rpx;
+		color: $u-main-color;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 6rpx;
+	}
 }
+.pop-content{
+	width: 90%;
+	margin: 0 auto;
+}
+/deep/{
+	.u-drawer{
+		.u-drawer-content{
+			background-color: rgba(255,255,255,0)!important;
+			.shareContainer{
+				position: relative;
+				left: 15px;
+				margin-top: 30px;
+				width: calc(100% - 30px);
+				padding: 30rpx;
+				background-color: #fff;
+				border-radius: 10rpx;
+				z-index: 10099;
+				.arrow{
+					position: absolute;
+					top: -14px;
+					right: 55px;
+					z-index: 10099;
+				}
+			}
+			
+		}
+	}
+	
+} 
 </style>

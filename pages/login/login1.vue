@@ -4,7 +4,7 @@
 		<view class="container flex flex-direction">
 			<view class="header flex align-center justify-center">
 				<view class="avatar flex align-center flex-direction">
-					<u-avatar src="./../../static/image/loginlogo.png" size="176"></u-avatar>
+					<u-avatar src="https://jjsp.activitysign.com/image/loginlogo.png" size="176"></u-avatar>
 				</view>
 			</view>
 			<view class="form" v-show="toogleLogin">

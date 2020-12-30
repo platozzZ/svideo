@@ -1,6 +1,6 @@
 <template>
 	<view class="">
-		<u-navbar title="浏览历史"></u-navbar>
+		<!-- <u-navbar title="播放历史"></u-navbar> -->
 		<block v-if="list.length > 0">
 		<view class="p-list">
 			<view class="p-item u-border-bottom" v-for="(item,index) in list" :key="index" @click="toDetail(item.id)">
@@ -23,7 +23,7 @@
 				</view>
 			</view>
 		</view>
-		<u-loadmore bg-color="rgb(240, 240, 240)" margin-top="20" margin-bottom="20" :status="loadStatus"></u-loadmore>
+		<u-loadmore :is-dot="true" :status="loadStatus" margin-top="20" margin-bottom="20"></u-loadmore>
 		</block>
 		<view class="emptyContainer" v-else>
 			<u-empty text="暂无更多数据" mode="list"></u-empty>
@@ -76,17 +76,9 @@ export default {
 					that.list = []
 				}
 				that.list = that.list.concat(res.data)
-				// if(res.last_page == 1){
-				// 	that.showLoadmore = false
-				// } else {
-				// 	that.showLoadmore = true
-				// }
-				// console.log('showLoadmore:',that.showLoadmore)
-				// that.cmsList = that.cmsList.concat(art)
-				// uni.stopPullDownRefresh();
 				that.page++;
 				// that.showLoadmore == true
-				if(res.data.length == 0){
+				if(res.data.length == 0 || data.page == res.last_page){
 					that.loadStatus = 'nomore';
 					return
 				}

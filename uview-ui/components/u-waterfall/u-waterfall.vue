@@ -36,6 +36,10 @@ export default {
 		idKey: {
 			type: String,
 			default: 'id'
+		},
+		isPage1: {
+			type: Boolean,
+			default: true
 		}
 	},
 	data() {
@@ -47,15 +51,32 @@ export default {
 		}
 	},
 	watch: {
+		// value(nVal, oVal){
+		// 	console.log('nVal',nVal)
+		// 	console.log('oVal',oVal)
+		// 	// let startIndex = Array.isArray(oVal) && oVal.length > 0 ? oVal.length : 0;
+		// 	this.tempList = this.cloneData(nVal);
+		// 	this.splitData();
+		// },
 		copyFlowList(nVal, oVal) {
-			// 取差值，即这一次数组变化新增的部分
-			let startIndex = Array.isArray(oVal) && oVal.length > 0 ? oVal.length : 0;
-			// 拼接上原有数据
-			this.tempList = this.tempList.concat(this.cloneData(nVal.slice(startIndex)));
-			this.splitData();
+			if(this.isPage1){
+				this.leftList = []
+				this.rightList = []
+				this.tempList = []
+				this.tempList = this.cloneData(nVal);
+				this.splitData();
+			} else {
+				// 取差值，即这一次数组变化新增的部分
+				let startIndex = Array.isArray(oVal) && oVal.length > 0 ? oVal.length : 0;
+				// 拼接上原有数据
+				this.tempList = this.tempList.concat(this.cloneData(nVal.slice(startIndex)));
+				this.splitData();
+			}
+			
 		}
 	},
 	mounted() {
+		console.log(this.copyFlowList);
 		this.tempList = this.cloneData(this.copyFlowList);
 		this.splitData();
 	},
@@ -99,6 +120,7 @@ export default {
 		},
 		// 复制而不是引用对象和数组
 		cloneData(data) {
+			// console.log(data)
 			return JSON.parse(JSON.stringify(data));
 		},
 		// 清空数据列表

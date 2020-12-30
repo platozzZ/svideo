@@ -1,12 +1,12 @@
 <template>
 	<view class="">
-		<u-navbar title="意见反馈"></u-navbar>
+		<!-- <u-navbar title="意见反馈"></u-navbar> -->
 		<view class="padding-lg">
 			<u-loadmore status="nomore" color="#909399" font-size="28" :load-text="loadText"/>
 			<u-input v-model="value" type="textarea" height="600" :custom-style="customStyle" :clearable="false" placeholder="请告诉我们您遇到的问题或者想反馈的意见" />
 			<u-button type="warning" :custom-style="buttonCustomStyle" @click="submit">提交</u-button>
 		</view>
-		
+		<u-toast ref="uToast" />
 	</view>
 </template>
 
@@ -48,8 +48,13 @@ export default {
 				opinion: that.value
 			}
 			that.$u.post('/api/user/feedback', data).then(res => {
-				console.log('loginPwd',res);
-				that.$u.vuex('token', res.token)
+				console.log('submit',res);
+				that.$refs.uToast.show({
+					title: '发送成功',
+					type: 'success',
+					back: true
+				})
+				// that.$u.vuex('token', res.token)
 			}).catch(err => {
 				console.log('catch', err);
 			});

@@ -1,25 +1,29 @@
 <template>
 	<view class="">
-		<u-navbar :is-back="false" title="活动"></u-navbar>
+		<!-- <u-navbar :is-back="false" title="活动"></u-navbar> -->
 		<view class="padding-tb-sm padding-lr p-swiper">
 			<u-swiper :height="320" :list="swiperList" :title="title"
 			 :title-style="swiperStyle" name="cf_image" :interval="30000" @click="tapBanner"></u-swiper>
 		</view>
 		<view class="list">
-			<view class="item" v-for="(item,index) in 5" :key="index">
+			<view class="item" v-for="(item,index) in list" :key="item.guid_id" @click="toDetail(item.mid)">
+				<!-- <view class="top">
+					<u-image  :src="item.poster" width="100%" mode="widthFix"></u-image>
+				</view> -->
 				<view class="top">
-					<u-image src="https://cdn.uviewui.com/uview/example/fade.jpg" width="100%" mode="widthFix"></u-image>
+					<u-image :src="item.poster" width="100%" mode="widthFix"></u-image>
 				</view>
+				
 				<view class="content padding-top-sm padding-bottom padding-lr">
 					<view class="title u-font-36 u-line-1">
-						到底是来比赛还是旅行？玩这么嗨！
+						{{item.name}}
 					</view>
 					<view class="des u-type-info-disabled u-font-24 margin-tb-xs u-line-2">
-						今年的活动也有些不一样的地方，TDS的营地和商家展示区的位置都与往年不同，这主要是受限于当地的土地管…
+						{{item.intro}}
 					</view>
 					<view class="info u-type-info-dark u-font-22 flex align-center justify-between">
-						<text>地址：北京海淀区工人体育场</text>
-						<text>时间：2018/09/12-09/22</text>
+						<text>地址：{{item.address}}</text>
+						<text>时间：{{item.starttime + ' - ' + item.endtime}}</text>
 					</view>
 				</view>
 			</view>
@@ -40,6 +44,7 @@ export default {
 			title: true,
 			loadStatus: 'loadmore',
 			current: 0,
+			list: [],
 			page: 1,
 			totalPage: 0
 			
@@ -47,18 +52,22 @@ export default {
 	},
 	onLoad() {
 		that = this
+		console.log(that);
 		let data = {
-			distributor_id: that.userInfo.distributor_id,
+			// distributor_id: that.userInfo.distributor_id,
 			page: 1
 		}
 		that.getList(data);
-		that.getBanner()
+		let bannerData = {
+			type: 1
+		}
+		that.getBanner(bannerData)
 	},
 	onReachBottom() {
 		that.loadStatus = 'loading';
 		if (that.totalPage >= that.page) {
 			let data = {
-				distributor_id: that.userInfo.distributor_id,
+				// distributor_id: that.userInfo.distributor_id,
 				page: that.page
 			}
 			that.getList(data)
@@ -67,8 +76,8 @@ export default {
 		that.loadStatus = 'nomore'
 	},
 	methods: {
-		getBanner(){
-			that.$u.get('/api/carouselfigure/list').then(res => {
+		getBanner(data){
+			that.$u.post('/api/carouselfigure/list',data).then(res => {
 				console.log('getBanner',res);
 				let list = res
 				list.map((item,index) => {
@@ -80,27 +89,29 @@ export default {
 			});
 		},
 		getList(data){
-			that.$u.post('/api/video/list_new',data).then(res => {
+			that.$u.post('/activity/Gokart/activity',data).then(res => {
 				console.log('getList',res);
 				that.totalPage = res.last_page;
-				if (data.page == 1) {
-					that.flowList = []
+				let list = res.list
+				if(list.length > 0){
+					list.map((item,index) => {
+						item.guid_id = that.$u.guid();
+					})
 				}
-				that.addRandomData(res.data)
-				// that.cmsList = that.cmsList.concat(art)
-				// uni.stopPullDownRefresh();
+				console.log(list);
+				if (data.page == 1) {
+					that.list = []
+				}
+				that.list = that.list.concat(list)
 				that.page++;
-				if(res.data.length == 0){
+				if(res.list.length == 0 || data.page == res.last_page){
 					that.loadStatus = 'nomore';
 					return
-				}
+				} 
 				that.loadStatus = 'loadmore';
 			}).catch(err => {
 				console.log('getList-catch', err);
 			});
-			// this.$u.api.getInfo({id: 3}).then(res => {
-			// 	console.log(res);
-			// })
 		},
 		toAdd(e){
 			that.$u.route('/pages/add/add');
@@ -108,13 +119,20 @@ export default {
 		tapBanner(index){
 			console.log(index);
 			let id = that.swiperList[index].cf_id
-			that.toDetail(id)
+			// that.toDetail(id)
+			that.$u.route({
+				// url: '/pages/enrollDetail/enrollDetail',
+				url: '/pages/videoDetail/videoDetail',
+				params: {
+					id: id
+				}
+			})
 		},
 		toDetail(id){
 			console.log(id);
-			// that.$u.route('/pages/videoDetail/videoDetail');
 			that.$u.route({
-				url: '/pages/videoDetail/videoDetail',
+				url: '/pages/enrollDetail/enrollDetail',
+				// url: '/pages/videoDetail/videoDetail',
 				params: {
 					id: id
 				}
